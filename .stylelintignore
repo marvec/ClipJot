@@ -1,0 +1,17 @@
+# Demo app
+apps/demo/src/styles.css
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+
+# Other
+.cache/
+coverage/
+*.min.css
