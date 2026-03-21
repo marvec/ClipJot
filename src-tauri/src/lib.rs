@@ -1,5 +1,8 @@
 mod trim;
 
+use tauri::menu::{MenuBuilder, MenuItemBuilder};
+use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
+use tauri::{Manager, RunEvent, WindowEvent};
 use trim::TrimBounds;
 
 #[tauri::command]
@@ -40,13 +43,77 @@ async fn detect_trim(
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let app = tauri::Builder::default()
         .plugin(tauri_plugin_autostart::Builder::new().build())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![detect_trim])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .setup(|app| {
+            #[cfg(desktop)]
+            {
+                // System tray
+                let show = MenuItemBuilder::with_id("show", "Show ClipJot").build(app)?;
+                let quit = MenuItemBuilder::with_id("quit", "Quit ClipJot").build(app)?;
+                let menu = MenuBuilder::new(app).items(&[&show, &quit]).build()?;
+
+                TrayIconBuilder::new()
+                    .icon(app.default_window_icon().unwrap().clone())
+                    .tooltip("ClipJot")
+                    .menu(&menu)
+                    .show_menu_on_left_click(false)
+                    .on_menu_event(move |app, event| match event.id().as_ref() {
+                        "show" => {
+                            if let Some(window) = app.get_webview_window("main") {
+                                let _ = window.show();
+                                let _ = window.unminimize();
+                                let _ = window.set_focus();
+                            }
+                        }
+                        "quit" => {
+                            app.exit(0);
+                        }
+                        _ => {}
+                    })
+                    .on_tray_icon_event(|tray, event| {
+                        if let TrayIconEvent::Click {
+                            button: MouseButton::Left,
+                            button_state: MouseButtonState::Up,
+                            ..
+                        } = event
+                        {
+                            let app = tray.app_handle();
+                            if let Some(window) = app.get_webview_window("main") {
+                                let _ = window.show();
+                                let _ = window.unminimize();
+                                let _ = window.set_focus();
+                            }
+                        }
+                    })
+                    .build(app)?;
+            }
+
+            Ok(())
+        })
+        .on_window_event(|window, event| {
+            // Window close → hide to tray instead of quitting
+            if let WindowEvent::CloseRequested { api, .. } = event {
+                let _ = window.hide();
+                api.prevent_close();
+            }
+        })
+        .build(tauri::generate_context!())
+        .expect("error while building tauri application");
+
+    // Keep event loop alive for system tray
+    app.run(|_app_handle, event| {
+        if let RunEvent::ExitRequested { code, api, .. } = &event {
+            // Only prevent exit when no explicit exit code (e.g., all windows closed).
+            // Allow exit(0) from tray quit menu to go through.
+            if code.is_none() {
+                api.prevent_exit();
+            }
+        }
+    });
 }

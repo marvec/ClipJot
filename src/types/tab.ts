@@ -1,4 +1,5 @@
 import type { UndoRedoInstance } from "../composables/useUndoRedo"
+import type { DrawingState } from "../composables/useDrawing"
 
 export interface Tab {
   /** Unique tab identifier */
@@ -17,4 +18,6 @@ export interface Tab {
   copiedSinceLastEdit: boolean
   /** Undo/redo stack for this tab */
   undoRedo: UndoRedoInstance
+  /** Per-tab freehand drawing state (strokes, checkpoint, replay) */
+  drawingState: DrawingState
 }

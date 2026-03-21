@@ -1,6 +1,7 @@
 import { shallowRef, ref, computed, triggerRef } from "vue"
 import type { Tab } from "../types/tab"
 import { createUndoRedo } from "./useUndoRedo"
+import { createDrawingState } from "./useDrawing"
 
 // Module-level state (singleton)
 const tabs = shallowRef<Tab[]>([])
@@ -18,6 +19,7 @@ function initClipboardTab(): void {
     imageHeight: 0,
     copiedSinceLastEdit: true,
     undoRedo: createUndoRedo(),
+    drawingState: createDrawingState(),
   }
   tabs.value = [clipboardTab]
   activeTabId.value = "clipboard"
@@ -81,6 +83,7 @@ export function useTabStore() {
       imageHeight,
       copiedSinceLastEdit: false,
       undoRedo: createUndoRedo(),
+      drawingState: createDrawingState(),
     }
 
     tabs.value = [...tabs.value, tab]

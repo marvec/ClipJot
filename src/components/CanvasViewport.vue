@@ -2,10 +2,23 @@
 import { computed } from "vue"
 import { useTabStore } from "../composables/useTabStore"
 import EmptyClipboard from "./EmptyClipboard.vue"
+import FreehandCanvas from "./FreehandCanvas.vue"
 
 const { activeTab } = useTabStore()
 
 const hasImage = computed(() => activeTab.value?.imageUrl != null)
+
+/**
+ * Convert screen-space offset coordinates to image-space coordinates.
+ * At 1:1 zoom with no pan, this is identity. When zoom/pan are added
+ * (via useZoom's ViewportContext), this will account for CSS transforms.
+ */
+function screenToImage(
+  sx: number,
+  sy: number,
+): { x: number; y: number } {
+  return { x: sx, y: sy }
+}
 </script>
 
 <template>
@@ -20,7 +33,14 @@ const hasImage = computed(() => activeTab.value?.imageUrl != null)
           alt="Clipboard image"
           draggable="false"
         />
-        <!-- Future layers (redaction, freehand, SVG) will stack here -->
+        <!-- Freehand canvas stacks above base image (z:2 in layer model) -->
+        <FreehandCanvas
+          :drawing-state="activeTab.drawingState"
+          :image-width="activeTab.imageWidth"
+          :image-height="activeTab.imageHeight"
+          :undo-redo-push="(cmd) => activeTab!.undoRedo.push(cmd)"
+          :screen-to-image="screenToImage"
+        />
       </div>
     </template>
     <template v-else>
