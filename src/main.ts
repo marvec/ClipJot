@@ -25,11 +25,20 @@ registerHotkey().then((success) => {
   }
 });
 
-// Read clipboard on app launch — populate the clipboard tab with current image
-readClipboardImage().then((image) => {
+// Read clipboard on app launch — populate the clipboard tab with current image.
+// Retry with backoff since Tauri plugins may not be ready immediately at startup.
+async function loadClipboardWithRetry(attempts = 3, delayMs = 200): Promise<void> {
   const { updateClipboardImage } = useTabStore();
-  if (image) {
-    updateClipboardImage(image.url, image.width, image.height);
+  for (let i = 0; i < attempts; i++) {
+    const image = await readClipboardImage();
+    if (image) {
+      updateClipboardImage(image.url, image.width, image.height);
+      return;
+    }
+    if (i < attempts - 1) {
+      await new Promise((r) => setTimeout(r, delayMs * (i + 1)));
+    }
   }
-});
+}
+loadClipboardWithRetry();
 

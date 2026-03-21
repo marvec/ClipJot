@@ -30,7 +30,8 @@ export async function readClipboardImage(): Promise<ClipboardImage | null> {
     const url = URL.createObjectURL(blob)
 
     return { url, width, height }
-  } catch {
+  } catch (err) {
+    console.warn("[ClipJot] Clipboard read failed:", err)
     return null
   }
 }
