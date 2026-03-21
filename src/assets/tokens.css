@@ -1,0 +1,117 @@
+/* ClipJot semantic design tokens — maps Flexoki primitives to app roles */
+/* Light theme is :root default; dark theme via .theme-dark on :root */
+
+:root {
+  /* ── Surfaces ── */
+  --surface-app: var(--flexoki-paper);
+  --surface-panel: var(--flexoki-100);
+  --surface-canvas: var(--flexoki-200);
+  --surface-elevated: var(--flexoki-50);
+
+  /* ── Text ── */
+  --text-primary: var(--flexoki-950);
+  --text-secondary: var(--flexoki-600);
+  --text-disabled: var(--flexoki-300);
+  --text-inverse: var(--flexoki-50);
+
+  /* ── Borders ── */
+  --border-subtle: var(--flexoki-200);
+  --border-default: var(--flexoki-300);
+  --border-strong: var(--flexoki-400);
+
+  /* ── Interactive ── */
+  --interactive-default: var(--flexoki-blue-600);
+  --interactive-hover: var(--flexoki-blue-700);
+  --interactive-active: var(--flexoki-blue-800);
+  --interactive-disabled: var(--flexoki-300);
+
+  /* ── Tabs ── */
+  --tab-default: transparent;
+  --tab-active: var(--flexoki-paper);
+  --tab-clipboard: var(--flexoki-green-200);
+  --tab-copied: var(--flexoki-green-500);
+
+  /* ── Annotation palette (10 tool colors) ── */
+  --annotation-red: var(--flexoki-red-500);
+  --annotation-orange: var(--flexoki-orange-500);
+  --annotation-yellow: var(--flexoki-yellow-500);
+  --annotation-green: var(--flexoki-green-500);
+  --annotation-cyan: var(--flexoki-cyan-500);
+  --annotation-blue: var(--flexoki-blue-500);
+  --annotation-purple: var(--flexoki-purple-500);
+  --annotation-magenta: var(--flexoki-magenta-500);
+  --annotation-black: var(--flexoki-black);
+  --annotation-white: var(--flexoki-paper);
+
+  /* ── Overlays ── */
+  --overlay-dim: rgba(0, 0, 0, 0.4);
+  --overlay-backdrop: rgba(0, 0, 0, 0.5);
+
+  /* ── Feedback ── */
+  --feedback-success: var(--flexoki-green-500);
+  --feedback-warning: var(--flexoki-yellow-500);
+  --feedback-error: var(--flexoki-red-500);
+
+  /* ── Shadows (light theme only; dark uses border emphasis) ── */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Dark theme overrides ── */
+:root.theme-dark {
+  /* Surfaces */
+  --surface-app: var(--flexoki-950);
+  --surface-panel: var(--flexoki-900);
+  --surface-canvas: var(--flexoki-850);
+  --surface-elevated: var(--flexoki-800);
+
+  /* Text */
+  --text-primary: var(--flexoki-100);
+  --text-secondary: var(--flexoki-400);
+  --text-disabled: var(--flexoki-700);
+  --text-inverse: var(--flexoki-950);
+
+  /* Borders */
+  --border-subtle: var(--flexoki-800);
+  --border-default: var(--flexoki-700);
+  --border-strong: var(--flexoki-600);
+
+  /* Interactive */
+  --interactive-default: var(--flexoki-blue-400);
+  --interactive-hover: var(--flexoki-blue-300);
+  --interactive-active: var(--flexoki-blue-200);
+  --interactive-disabled: var(--flexoki-700);
+
+  /* Tabs */
+  --tab-default: transparent;
+  --tab-active: var(--flexoki-800);
+  --tab-clipboard: var(--flexoki-green-800);
+  --tab-copied: var(--flexoki-green-400);
+
+  /* Annotation palette */
+  --annotation-red: var(--flexoki-red-400);
+  --annotation-orange: var(--flexoki-orange-400);
+  --annotation-yellow: var(--flexoki-yellow-400);
+  --annotation-green: var(--flexoki-green-400);
+  --annotation-cyan: var(--flexoki-cyan-400);
+  --annotation-blue: var(--flexoki-blue-400);
+  --annotation-purple: var(--flexoki-purple-400);
+  --annotation-magenta: var(--flexoki-magenta-400);
+  --annotation-black: var(--flexoki-100);
+  --annotation-white: var(--flexoki-950);
+
+  /* Overlays */
+  --overlay-dim: rgba(0, 0, 0, 0.6);
+  --overlay-backdrop: rgba(0, 0, 0, 0.7);
+
+  /* Feedback */
+  --feedback-success: var(--flexoki-green-400);
+  --feedback-warning: var(--flexoki-yellow-400);
+  --feedback-error: var(--flexoki-red-400);
+
+  /* Shadows (none in dark theme — use border-strong for emphasis) */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+}
