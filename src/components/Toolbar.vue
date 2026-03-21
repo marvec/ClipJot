@@ -24,6 +24,7 @@ import {
   Scissors,
   RefreshCw,
   CopyPlus,
+  Settings,
 } from "lucide-vue-next";
 
 interface ToolDef {
@@ -57,6 +58,7 @@ const emit = defineEmits<{
   trim: [];
   refresh: [];
   duplicate: [];
+  settings: [];
 }>();
 
 function handleToolSelect(toolId: ToolId): void {
@@ -121,6 +123,14 @@ function handleToolSelect(toolId: ToolId): void {
         :icon="CopyPlus"
         label="Duplicate tab"
         @click="emit('duplicate')"
+      />
+
+      <div class="toolbar__divider" role="separator" />
+
+      <ActionButton
+        :icon="Settings"
+        label="Settings (⌘,)"
+        @click="emit('settings')"
       />
     </div>
   </div>

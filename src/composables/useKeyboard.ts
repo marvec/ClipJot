@@ -72,6 +72,13 @@ export function useKeyboard(): { destroy: () => void } {
       return
     }
 
+    // --- Cmd+,: Open settings ---
+    if (mod && e.key === "," && !e.shiftKey) {
+      e.preventDefault()
+      handleOpenSettings()
+      return
+    }
+
     // --- Cmd+W: Close active tab ---
     if (mod && e.key === "w" && !e.shiftKey) {
       e.preventDefault()
@@ -264,6 +271,10 @@ function handleEscape(): void {
       }
     },
   )
+}
+
+function handleOpenSettings(): void {
+  window.dispatchEvent(new CustomEvent("open-settings"))
 }
 
 function handleToolSelect(toolId: ToolId): void {

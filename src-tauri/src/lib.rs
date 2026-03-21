@@ -77,12 +77,17 @@ pub fn run() {
                 let close_tab_item = MenuItemBuilder::with_id("close-tab", "Close Tab")
                     .accelerator("CmdOrCtrl+W")
                     .build(app)?;
+                let settings_item = MenuItemBuilder::with_id("settings", "Settings…")
+                    .accelerator("CmdOrCtrl+,")
+                    .build(app)?;
                 let quit_item = MenuItemBuilder::with_id("quit", "Quit")
                     .accelerator("CmdOrCtrl+Q")
                     .build(app)?;
                 let file_menu = SubmenuBuilder::new(app, "File")
                     .item(&save_item)
                     .item(&close_tab_item)
+                    .separator()
+                    .item(&settings_item)
                     .separator()
                     .item(&quit_item)
                     .build()?;

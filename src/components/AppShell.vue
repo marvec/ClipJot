@@ -1,16 +1,55 @@
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from "vue";
 import TabBar from "./TabBar.vue";
 import Toolbar from "./Toolbar.vue";
 import SubToolbar from "./SubToolbar.vue";
 import CanvasViewport from "./CanvasViewport.vue";
+import SettingsDialog from "./SettingsDialog.vue";
 import { useTabStore } from "../composables/useTabStore";
 import { useToast } from "../composables/useToast";
 import { readClipboardImage } from "../composables/useClipboard";
 import { copyTabToClipboard, saveTabToFile } from "../composables/useExport";
+import { useMenuEvents } from "../composables/useMenuEvents";
 
 const { activeTab, updateClipboardImage, markTabCopied, duplicateClipboardTab } =
   useTabStore();
 const { success, error } = useToast();
+
+const showSettings = ref(false);
+
+function toggleSettings(): void {
+  showSettings.value = !showSettings.value;
+}
+
+// --- Menu events from native menu bar ---
+let unlistenMenu: (() => void) | null = null;
+
+function handleOpenSettings(): void {
+  window.removeEventListener("open-settings", handleOpenSettings);
+  toggleSettings();
+  window.addEventListener("open-settings", handleOpenSettings);
+}
+
+onMounted(async () => {
+  window.addEventListener("open-settings", handleOpenSettings);
+  unlistenMenu = await useMenuEvents({
+    onUndo: handleUndo,
+    onRedo: handleRedo,
+    onCopy: handleCopy,
+    onSave: handleSave,
+    onDelete: () => {},
+    onCloseTab: () => {},
+    onZoomIn: () => {},
+    onZoomOut: () => {},
+    onFitToWindow: () => {},
+    onSettings: toggleSettings,
+  });
+});
+
+onUnmounted(() => {
+  window.removeEventListener("open-settings", handleOpenSettings);
+  unlistenMenu?.();
+});
 
 async function handleCopy(): Promise<void> {
   const tab = activeTab.value;
@@ -86,9 +125,11 @@ function handleDuplicate(): void {
       @refresh="handleRefresh"
       @trim="handleTrim"
       @duplicate="handleDuplicate"
+      @settings="toggleSettings"
     />
     <SubToolbar />
     <CanvasViewport />
+    <SettingsDialog v-if="showSettings" @close="showSettings = false" />
   </div>
 </template>
 

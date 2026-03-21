@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch, onMounted, onUnmounted } from "vue"
+import { computed, nextTick, ref, watch, onMounted, onUnmounted } from "vue"
 import { useTabStore } from "../composables/useTabStore"
 import { useAnnotationStore } from "../composables/useAnnotationStore"
 import { useTextEditing } from "../composables/useTextEditing"
@@ -90,7 +90,7 @@ let resizeObserver: ResizeObserver | null = null
 
 function callFitToWindow(): void {
   const el = viewportRef.value
-  if (!el) return
+  if (!el || el.clientWidth === 0 || el.clientHeight === 0) return
   viewport.fitToWindow(el.clientWidth, el.clientHeight)
 }
 
@@ -111,10 +111,10 @@ onUnmounted(() => {
   resizeObserver = null
 })
 
-// Re-fit when the active image changes
+// Re-fit when the active image changes (nextTick ensures DOM layout is settled)
 watch(
   () => activeTab.value?.imageUrl,
-  () => callFitToWindow(),
+  () => void nextTick(callFitToWindow),
 )
 
 // ── Scroll-wheel zoom (Ctrl/Meta + wheel) ──────────────────────────────────

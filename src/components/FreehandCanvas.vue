@@ -25,6 +25,8 @@ let currentPoints: [number, number, number][] = []
 let preStrokeSnapshot: ImageData | null = null
 let rafId: number | null = null
 let isDrawing = false
+/** Cached viewport element for coordinate transforms during a stroke */
+let viewportEl: HTMLElement | null = null
 
 /** Settings captured at pointerdown for the duration of the stroke */
 let strokeSettings: FreehandToolSettings | null = null
@@ -59,9 +61,24 @@ watch(
   },
 )
 
+/**
+ * Convert a pointer event to image-space coordinates.
+ * Uses clientX/clientY relative to the viewport container (not offsetX/offsetY
+ * on the canvas) so the CSS transform applied by zoom/pan is accounted for.
+ */
+function pointerToImage(e: PointerEvent): { x: number; y: number } | null {
+  const rect = viewportEl?.getBoundingClientRect()
+  if (!rect) return null
+  return props.screenToImage(e.clientX - rect.left, e.clientY - rect.top)
+}
+
 function onPointerDown(e: PointerEvent): void {
   if (!ctx || !isFreehandTool(activeTool.value)) return
   if (e.button !== 0) return // Left click only
+
+  // Cache the viewport container for the duration of this stroke
+  viewportEl =
+    canvasRef.value?.closest<HTMLElement>(".canvas-viewport") ?? null
 
   isDrawing = true
 
@@ -78,8 +95,9 @@ function onPointerDown(e: PointerEvent): void {
     props.imageHeight,
   )
 
-  const { x, y } = props.screenToImage(e.offsetX, e.offsetY)
-  currentPoints = [[x, y, e.pressure || 0.5]]
+  const pt = pointerToImage(e)
+  if (!pt) return
+  currentPoints = [[pt.x, pt.y, e.pressure || 0.5]]
 
   // Capture pointer for reliable tracking
   ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
@@ -91,8 +109,9 @@ function onPointerMove(e: PointerEvent): void {
   // Collect coalesced events for smooth strokes (B5)
   const events = e.getCoalescedEvents?.() ?? [e]
   for (const ce of events) {
-    const { x, y } = props.screenToImage(ce.offsetX, ce.offsetY)
-    currentPoints.push([x, y, ce.pressure || 0.5])
+    const pt = pointerToImage(ce)
+    if (!pt) continue
+    currentPoints.push([pt.x, pt.y, ce.pressure || 0.5])
   }
 
   // Batch render via rAF
@@ -141,6 +160,7 @@ function onPointerUp(_e: PointerEvent): void {
     currentPoints = []
     preStrokeSnapshot = null
     strokeSettings = null
+    viewportEl = null
     return
   }
 
@@ -169,6 +189,7 @@ function onPointerUp(_e: PointerEvent): void {
   currentPoints = []
   preStrokeSnapshot = null
   strokeSettings = null
+  viewportEl = null
 }
 </script>
 

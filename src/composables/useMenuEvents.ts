@@ -41,6 +41,7 @@ export interface MenuEventHandlers {
   onZoomIn: () => void
   onZoomOut: () => void
   onFitToWindow: () => void
+  onSettings: () => void
 }
 
 /**
@@ -95,6 +96,9 @@ export async function useMenuEvents(
           break
         case "fit-to-window":
           handlers.onFitToWindow()
+          break
+        case "settings":
+          handlers.onSettings()
           break
         case "toggle-theme": {
           const next = theme.value === "dark" ? "light" : "dark"
