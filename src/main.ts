@@ -6,6 +6,8 @@ import App from "./App.vue";
 import { useSettings } from "./composables/useSettings";
 import { useGlobalHotkey } from "./composables/useGlobalHotkey";
 import { useKeyboard } from "./composables/useKeyboard";
+import { readClipboardImage } from "./composables/useClipboard";
+import { useTabStore } from "./composables/useTabStore";
 
 // Initialize settings — applies persisted theme (or system default) immediately
 useSettings();
@@ -20,6 +22,14 @@ const { registerHotkey } = useGlobalHotkey();
 registerHotkey().then((success) => {
   if (!success) {
     console.warn("Global hotkey registration failed — shortcut may be in use");
+  }
+});
+
+// Read clipboard on app launch — populate the clipboard tab with current image
+readClipboardImage().then((image) => {
+  const { updateClipboardImage } = useTabStore();
+  if (image) {
+    updateClipboardImage(image.url, image.width, image.height);
   }
 });
 
