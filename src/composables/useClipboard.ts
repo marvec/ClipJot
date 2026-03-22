@@ -29,7 +29,15 @@ export async function readClipboardImage(): Promise<ClipboardImage | null> {
     const blob = await canvas.convertToBlob({ type: "image/png" })
     const url = URL.createObjectURL(blob)
 
-    return { url, width, height }
+    // Read back the true dimensions from the created blob.
+    // image.size() may return logical (point) dimensions on Retina,
+    // while the PNG blob encodes at physical pixel dimensions.
+    const bitmap = await createImageBitmap(blob)
+    const trueWidth = bitmap.width
+    const trueHeight = bitmap.height
+    bitmap.close()
+
+    return { url, width: trueWidth, height: trueHeight }
   } catch (err) {
     console.warn("[ClipJot] Clipboard read failed:", err)
     return null
