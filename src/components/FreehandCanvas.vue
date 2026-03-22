@@ -214,8 +214,6 @@ function onPointerUp(_e: PointerEvent): void {
     ref="canvasRef"
     class="freehand-canvas"
     :style="{
-      width: imageWidth + 'px',
-      height: imageHeight + 'px',
       pointerEvents: pointerEventsStyle,
     }"
     @pointerdown="onPointerDown"
@@ -229,6 +227,8 @@ function onPointerUp(_e: PointerEvent): void {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
   /* pointer-events is set dynamically via :style binding */
   touch-action: none;
 }

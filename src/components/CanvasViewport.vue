@@ -642,8 +642,6 @@ function onPointerUp(e: PointerEvent): void {
         <div
           class="canvas-viewport__interaction-overlay"
           :style="{
-            width: activeTab.imageWidth + 'px',
-            height: activeTab.imageHeight + 'px',
             pointerEvents: overlayPointerEvents,
           }"
           @pointerdown="onOverlayPointerDown"
@@ -656,8 +654,6 @@ function onPointerUp(e: PointerEvent): void {
           v-if="previewRect || previewLine"
           class="canvas-viewport__preview-svg"
           :viewBox="`0 0 ${activeTab.imageWidth} ${activeTab.imageHeight}`"
-          :width="activeTab.imageWidth"
-          :height="activeTab.imageHeight"
         >
           <rect
             v-if="previewRect && activeTool === 'rect'"
@@ -769,6 +765,8 @@ function onPointerUp(e: PointerEvent): void {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 4;
   touch-action: none;
   cursor: crosshair;
@@ -778,6 +776,8 @@ function onPointerUp(e: PointerEvent): void {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 5;
   pointer-events: none;
   overflow: visible;

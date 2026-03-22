@@ -53,8 +53,6 @@ function getSelectedAnnotation(
   <svg
     class="svg-annotation-layer"
     :viewBox="`0 0 ${imageWidth} ${imageHeight}`"
-    :width="imageWidth"
-    :height="imageHeight"
     xmlns="http://www.w3.org/2000/svg"
   >
     <!-- Render each annotation based on type -->
@@ -119,6 +117,8 @@ function getSelectedAnnotation(
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   overflow: visible;
 }
