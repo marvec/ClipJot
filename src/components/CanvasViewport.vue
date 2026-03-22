@@ -516,6 +516,11 @@ onUnmounted(() => {
   resizeObserver = null
 })
 
+/** Re-fit when the image finishes loading (natural dimensions now available). */
+function onImageLoad(): void {
+  nextTick(callFitToWindow)
+}
+
 // Re-fit when the active image changes (nextTick ensures DOM layout is settled)
 watch(
   () => activeTab.value?.imageUrl,
@@ -600,13 +605,12 @@ function onPointerUp(e: PointerEvent): void {
       >
         <img
           :src="activeTab.imageUrl!"
-          :style="{
-            width: activeTab.imageWidth + 'px',
-            height: activeTab.imageHeight + 'px',
-          }"
+          :width="activeTab.imageWidth"
+          :height="activeTab.imageHeight"
           class="canvas-viewport__base-image"
           alt="Clipboard image"
           draggable="false"
+          @load="onImageLoad"
         />
         <!-- Redaction canvas stacks above base image (z:1 in layer model) -->
         <RedactionCanvas
