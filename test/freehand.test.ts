@@ -800,6 +800,6 @@ describe("Export FreehandCanvas Integration", () => {
     )
     expect(content).toContain("drawingState")
     expect(content).toContain("redrawAll")
-    expect(content).toContain("freehandCanvas")
+    expect(content).toContain("freehandEl")
   })
 })

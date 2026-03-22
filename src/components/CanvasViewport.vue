@@ -33,6 +33,7 @@ import RedactionCanvas from "./RedactionCanvas.vue"
 import FreehandCanvas from "./FreehandCanvas.vue"
 import SvgAnnotationLayer from "./SvgAnnotationLayer.vue"
 import TextEditor from "./TextEditor.vue"
+import CropOverlay from "./CropOverlay.vue"
 import ContextualPanel from "./ContextualPanel.vue"
 
 const { activeTab, duplicateActiveTab } = useTabStore()
@@ -706,6 +707,16 @@ function onPointerUp(e: PointerEvent): void {
           @cancel="onTextCancel"
           @delete="onTextDelete"
         />
+
+        <!-- Crop overlay (z:20) for manual crop tool -->
+        <CropOverlay
+          v-if="activeTool === 'crop' && activeTab"
+          :image-width="activeTab.imageWidth"
+          :image-height="activeTab.imageHeight"
+          :screen-to-image="screenToImage"
+          :crop-bounds="activeTab.cropState.cropBounds"
+          :undo-redo-push="(cmd) => activeTab!.undoRedo.push(cmd)"
+        />
       </div>
 
       <!-- Contextual property panel (z:30 in layer model) -->
@@ -736,6 +747,7 @@ function onPointerUp(e: PointerEvent): void {
   left: 0;
   transform-origin: 0 0;
   will-change: transform;
+  overflow: hidden;
 }
 
 .canvas-viewport__base-image {

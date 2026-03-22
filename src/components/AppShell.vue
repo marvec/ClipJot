@@ -74,7 +74,9 @@ async function handleSave(): Promise<void> {
   if (!tab?.imageUrl) return;
   try {
     const { save } = await import("@tauri-apps/plugin-dialog");
+    const defaultName = `${tab.name.replace(/[/:]/g, "-")}.png`;
     const path = await save({
+      defaultPath: defaultName,
       filters: [{ name: "PNG Image", extensions: ["png"] }],
     });
     if (path) {
@@ -82,6 +84,7 @@ async function handleSave(): Promise<void> {
       success("Saved");
     }
   } catch (e) {
+    console.error("[ClipJot] Save failed:", e);
     error("Save failed");
   }
 }

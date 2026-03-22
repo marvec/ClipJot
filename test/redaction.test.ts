@@ -515,12 +515,12 @@ describe("Export integration", () => {
   })
 
   test("creates separate base canvas for pixel reading", () => {
-    // The export should create a separate OffscreenCanvas for base pixel reads
+    // The export should create a separate canvas for base pixel reads
     // to avoid reading already-redacted pixels
     const exportBody = exportFile.slice(
       exportFile.indexOf("Destructive redaction"),
     )
-    expect(exportBody).toContain("baseCanvas")
+    expect(exportBody).toContain("baseEl")
     expect(exportBody).toContain("baseCtx")
   })
 })

@@ -12,7 +12,6 @@ const props = defineProps<{
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 let ctx: CanvasRenderingContext2D | null = null
-let baseCanvas: OffscreenCanvas | null = null
 let baseCtx: CanvasRenderingContext2D | null = null
 
 onMounted(async () => {
@@ -28,11 +27,12 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
-  baseCanvas = null
   baseCtx = null
 })
 
-/** Load the base image into an offscreen canvas for pixel reading */
+/** Load the base image into a regular (non-offscreen) canvas for pixel reading.
+ *  We use a regular canvas because OffscreenCanvasRenderingContext2D doesn't
+ *  support ctx.filter in WebKit, breaking blur redaction. */
 async function loadBaseImage(): Promise<void> {
   const img = await new Promise<HTMLImageElement>((resolve, reject) => {
     const el = new Image()
@@ -41,11 +41,14 @@ async function loadBaseImage(): Promise<void> {
     el.src = props.baseImageUrl
   })
 
-  baseCanvas = new OffscreenCanvas(props.imageWidth, props.imageHeight)
-  const offCtx = baseCanvas.getContext("2d")
-  if (offCtx) {
-    offCtx.drawImage(img, 0, 0)
-    baseCtx = offCtx as unknown as CanvasRenderingContext2D
+  // Create a hidden canvas element for base pixel reading
+  const hiddenCanvas = document.createElement("canvas")
+  hiddenCanvas.width = props.imageWidth
+  hiddenCanvas.height = props.imageHeight
+  const hiddenCtx = hiddenCanvas.getContext("2d")
+  if (hiddenCtx) {
+    hiddenCtx.drawImage(img, 0, 0)
+    baseCtx = hiddenCtx
   }
 }
 

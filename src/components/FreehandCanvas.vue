@@ -83,10 +83,13 @@ function onPointerDown(e: PointerEvent): void {
   if (!ctx || !isFreehandTool(activeTool.value)) return
   if (e.button !== 0) return // Left click only
 
-  // Auto-duplicate clipboard tab on first interaction (Bug 3 fix)
+  // Auto-duplicate clipboard tab on first interaction.
+  // We must return because the component props (drawingState, undoRedoPush)
+  // still reference the old clipboard tab. Vue will re-render with new tab's
+  // props after duplication. The user's next pointerdown will proceed normally.
   if (activeTab.value?.type === "clipboard") {
     duplicateActiveTab()
-    return // The tab switch will re-mount; let the next pointerdown proceed
+    return
   }
 
   // Cache the viewport container for the duration of this stroke

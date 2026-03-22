@@ -73,32 +73,40 @@ export async function flattenTab(tab: Tab): Promise<ExportResult> {
 
   // ── Layer 2: Destructive redaction ──
   // Permanently flatten redaction regions onto the base pixels.
-  // A separate base canvas provides the unmodified pixel source for
-  // pixelation/blur effects to read from.
+  // Use regular (non-offscreen) canvases because OffscreenCanvasRenderingContext2D
+  // doesn't support ctx.filter in WebKit, breaking blur redaction.
   if (tab.redactionState.regions.value.length > 0) {
-    const baseCanvas = new OffscreenCanvas(imgW, imgH)
-    const baseCtx = baseCanvas.getContext("2d")!
+    // Base canvas for pixel reading (unmodified source for pixelate/blur)
+    const baseEl = document.createElement("canvas")
+    baseEl.width = imgW
+    baseEl.height = imgH
+    const baseCtx = baseEl.getContext("2d")!
     baseCtx.drawImage(canvas, 0, 0)
 
+    // Redaction target — draw onto a regular canvas, then composite back
+    const redactEl = document.createElement("canvas")
+    redactEl.width = imgW
+    redactEl.height = imgH
+    const redactCtx = redactEl.getContext("2d")!
+    redactCtx.drawImage(canvas, 0, 0)
+
     for (const region of tab.redactionState.regions.value) {
-      renderRedactionRegion(
-        ctx as unknown as CanvasRenderingContext2D,
-        region,
-        baseCtx as unknown as CanvasRenderingContext2D,
-      )
+      renderRedactionRegion(redactCtx, region, baseCtx)
     }
+
+    // Composite redacted result back to the offscreen export canvas
+    ctx.clearRect(0, 0, imgW, imgH)
+    ctx.drawImage(redactEl, 0, 0)
   }
 
   // ── Layer 3: Freehand strokes ──
   if (tab.drawingState.strokes.value.length > 0) {
-    const freehandCanvas = new OffscreenCanvas(imgW, imgH)
-    const freehandCtx = freehandCanvas.getContext("2d")!
-    tab.drawingState.redrawAll(
-      freehandCtx as unknown as CanvasRenderingContext2D,
-      imgW,
-      imgH,
-    )
-    ctx.drawImage(freehandCanvas, 0, 0)
+    const freehandEl = document.createElement("canvas")
+    freehandEl.width = imgW
+    freehandEl.height = imgH
+    const freehandCtx = freehandEl.getContext("2d")!
+    tab.drawingState.redrawAll(freehandCtx, imgW, imgH)
+    ctx.drawImage(freehandEl, 0, 0)
   }
 
   // ── Layer 4: SVG annotations (all types including text) ──

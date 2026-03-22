@@ -5,6 +5,22 @@ import { createDrawingState } from "./useDrawing"
 import { createCropState } from "./useCrop"
 import { createAnnotationState } from "./useAnnotationStore"
 import { createRedactionState } from "./useRedaction"
+import { useSettings } from "./useSettings"
+
+/**
+ * Format a tab name from a date and pattern string.
+ * Supported tokens: HH (hours), mm (minutes), ss (seconds),
+ * YYYY (year), MM (month), DD (day).
+ */
+function formatTabName(date: Date, pattern: string): string {
+  return pattern
+    .replace("YYYY", String(date.getFullYear()))
+    .replace("MM", String(date.getMonth() + 1).padStart(2, "0"))
+    .replace("DD", String(date.getDate()).padStart(2, "0"))
+    .replace("HH", String(date.getHours()).padStart(2, "0"))
+    .replace("mm", String(date.getMinutes()).padStart(2, "0"))
+    .replace("ss", String(date.getSeconds()).padStart(2, "0"))
+}
 
 // Module-level state (singleton)
 const tabs = shallowRef<Tab[]>([])
@@ -83,7 +99,8 @@ export function useTabStore() {
     imageHeight: number,
   ): Tab {
     const now = new Date()
-    const name = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}`
+    const { tabNamePattern } = useSettings()
+    const name = formatTabName(now, tabNamePattern.value)
 
     const tab: Tab = {
       id: crypto.randomUUID(),

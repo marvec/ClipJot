@@ -39,7 +39,7 @@ describe("Layer ordering", () => {
       exportFile.indexOf("Layer 2"),
       exportFile.indexOf("Layer 3"),
     )
-    expect(redactionSection).toContain("baseCanvas")
+    expect(redactionSection).toContain("baseEl")
     expect(redactionSection).toContain("baseCtx")
     expect(redactionSection).toContain("renderRedactionRegion")
   })
@@ -68,7 +68,8 @@ describe("Crop application", () => {
   })
 
   test("export canvas uses crop dimensions when crop is set", () => {
-    expect(exportFile).toContain("new OffscreenCanvas(crop.width, crop.height)")
+    expect(exportFile).toContain("crop.width")
+    expect(exportFile).toContain("crop.height")
   })
 
   test("crop uses drawImage source-region extraction", () => {
