@@ -600,8 +600,6 @@ function onPointerUp(e: PointerEvent): void {
       >
         <img
           :src="activeTab.imageUrl!"
-          :width="activeTab.imageWidth"
-          :height="activeTab.imageHeight"
           class="canvas-viewport__base-image"
           alt="Clipboard image"
           draggable="false"
@@ -747,7 +745,6 @@ function onPointerUp(e: PointerEvent): void {
   left: 0;
   transform-origin: 0 0;
   will-change: transform;
-  overflow: hidden;
 }
 
 .canvas-viewport__base-image {
