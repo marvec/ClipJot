@@ -47,3 +47,42 @@ describe("Tool store crop settings", () => {
     expect(content).toContain("updateCropSettings")
   })
 })
+
+describe("Aspect ratio constraint", () => {
+  test("constrainToRatio returns correct dimensions for 16:9", () => {
+    const { constrainToRatio } = require("../src/utils/cropRatio")
+    const result = constrainToRatio(200, 200, 16 / 9)
+    expect(result.width).toBe(200)
+    expect(Math.round(result.height)).toBe(113)
+  })
+
+  test("constrainToRatio returns original dimensions for null ratio", () => {
+    const { constrainToRatio } = require("../src/utils/cropRatio")
+    const result = constrainToRatio(200, 150, null)
+    expect(result.width).toBe(200)
+    expect(result.height).toBe(150)
+  })
+
+  test("constrainToRatio handles 1:1", () => {
+    const { constrainToRatio } = require("../src/utils/cropRatio")
+    const result = constrainToRatio(300, 200, 1)
+    expect(result.width).toBe(200)
+    expect(result.height).toBe(200)
+  })
+
+  test("constrainToRatio handles 4:3", () => {
+    const { constrainToRatio } = require("../src/utils/cropRatio")
+    const result = constrainToRatio(400, 400, 4 / 3)
+    expect(result.width).toBe(400)
+    expect(result.height).toBe(300)
+  })
+
+  test("resolveAspectRatio maps presets to numeric ratios", () => {
+    const { resolveAspectRatio } = require("../src/utils/cropRatio")
+    expect(resolveAspectRatio("free", 800, 600)).toBeNull()
+    expect(resolveAspectRatio("original", 800, 600)).toBeCloseTo(800 / 600)
+    expect(resolveAspectRatio("16:9", 800, 600)).toBeCloseTo(16 / 9)
+    expect(resolveAspectRatio("4:3", 800, 600)).toBeCloseTo(4 / 3)
+    expect(resolveAspectRatio("1:1", 800, 600)).toBe(1)
+  })
+})
