@@ -259,12 +259,10 @@ function handleDeleteSelected(): void {
 }
 
 function handleEscape(): void {
-  Promise.all([import("./useSelection"), import("./useTabStore"), import("./useToolStore")]).then(
-    ([selectionMod, tabMod, toolMod]) => {
+  Promise.all([import("./useSelection"), import("./useToolStore")]).then(
+    ([selectionMod, toolMod]) => {
       const { deselect, hasSelection } = selectionMod.useSelection()
-      const { activeTab } = tabMod.useTabStore()
       const { activeTool, setTool } = toolMod.useToolStore()
-      const tab = activeTab.value
 
       // If crop tool is active, switch to select (CropOverlay handles its own Escape)
       if (activeTool.value === "crop") {
