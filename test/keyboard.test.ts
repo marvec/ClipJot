@@ -62,44 +62,52 @@ describe("Keyboard Shortcut Definitions", () => {
 })
 
 describe("Tool Key Map", () => {
-  test("maps 1 to select", () => {
-    expect(keyboardFile).toContain('"1": "select"')
+  test("maps s to select", () => {
+    expect(keyboardFile).toContain('s: "select"')
   })
 
-  test("maps 2 to pen", () => {
-    expect(keyboardFile).toContain('"2": "pen"')
+  test("maps p to pen", () => {
+    expect(keyboardFile).toContain('p: "pen"')
   })
 
-  test("maps 3 to pencil", () => {
-    expect(keyboardFile).toContain('"3": "pencil"')
+  test("maps i to pencil", () => {
+    expect(keyboardFile).toContain('i: "pencil"')
   })
 
-  test("maps 4 to marker", () => {
-    expect(keyboardFile).toContain('"4": "marker"')
+  test("maps m to marker", () => {
+    expect(keyboardFile).toContain('m: "marker"')
   })
 
-  test("maps 5 to eraser", () => {
-    expect(keyboardFile).toContain('"5": "eraser"')
+  test("maps e to eraser", () => {
+    expect(keyboardFile).toContain('e: "eraser"')
   })
 
-  test("maps 6 to arrow", () => {
-    expect(keyboardFile).toContain('"6": "arrow"')
+  test("maps a to arrow", () => {
+    expect(keyboardFile).toContain('a: "arrow"')
   })
 
-  test("maps 7 to line", () => {
-    expect(keyboardFile).toContain('"7": "line"')
+  test("maps l to line", () => {
+    expect(keyboardFile).toContain('l: "line"')
   })
 
-  test("maps 8 to rect", () => {
-    expect(keyboardFile).toContain('"8": "rect"')
+  test("maps r to rect", () => {
+    expect(keyboardFile).toContain('r: "rect"')
   })
 
-  test("maps 9 to ellipse", () => {
-    expect(keyboardFile).toContain('"9": "ellipse"')
+  test("maps c to ellipse", () => {
+    expect(keyboardFile).toContain('c: "ellipse"')
   })
 
-  test("maps 0 to crop", () => {
-    expect(keyboardFile).toContain('"0": "crop"')
+  test("maps o to callout", () => {
+    expect(keyboardFile).toContain('o: "callout"')
+  })
+
+  test("maps t to text", () => {
+    expect(keyboardFile).toContain('t: "text"')
+  })
+
+  test("maps d to redact", () => {
+    expect(keyboardFile).toContain('d: "redact"')
   })
 })
 
@@ -229,9 +237,9 @@ describe("Text Editing Guard", () => {
 })
 
 describe("Escape Behavior", () => {
-  test("cancels crop mode on Escape", () => {
-    expect(keyboardFile).toContain("cropState.cropBounds")
-    expect(keyboardFile).toContain("cropState.showTrimOverlay")
+  test("switches to select tool on Escape when crop is active", () => {
+    expect(keyboardFile).toContain('activeTool.value === "crop"')
+    expect(keyboardFile).toContain('setTool("select")')
   })
 
   test("deselects selection on Escape", () => {

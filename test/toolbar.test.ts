@@ -67,7 +67,6 @@ describe("Toolbar", () => {
       "Redo2",
       "Copy",
       "Save",
-      "Scissors",
       "RefreshCw",
       "CopyPlus",
     ];
@@ -82,7 +81,6 @@ describe("Toolbar", () => {
       "redo",
       "copy",
       "save",
-      "trim",
       "refresh",
       "duplicate",
     ];

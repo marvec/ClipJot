@@ -34,14 +34,6 @@ describe("useSettings composable", () => {
     expect(settings).toContain('loadFromStorage<boolean>("autoCopyOnClose", true)')
   })
 
-  test("has autoTrimOnPaste setting with true default", () => {
-    expect(settings).toContain('loadFromStorage<boolean>("autoTrimOnPaste", true)')
-  })
-
-  test("has trimThreshold setting with 10 default", () => {
-    expect(settings).toContain('loadFromStorage<number>("trimThreshold", 10)')
-  })
-
   test("has tabNamePattern setting with HH:mm:ss default", () => {
     expect(settings).toContain('loadFromStorage<string>("tabNamePattern", "HH:mm:ss")')
   })
@@ -67,7 +59,6 @@ describe("useSettings composable", () => {
     // Each setting has a watcher
     expect(settings).toContain('watch(theme, (v) => saveToStorage("theme", v))')
     expect(settings).toContain('watch(autoCopyOnClose, (v) => saveToStorage("autoCopyOnClose", v))')
-    expect(settings).toContain('watch(trimThreshold, (v) => saveToStorage("trimThreshold", v))')
   })
 
   test("uses prefixed storage keys", () => {
@@ -96,15 +87,9 @@ describe("useSettings composable", () => {
   test("exports setter functions for all settings", () => {
     expect(settings).toContain("function setTheme")
     expect(settings).toContain("function setAutoCopyOnClose")
-    expect(settings).toContain("function setAutoTrimOnPaste")
-    expect(settings).toContain("function setTrimThreshold")
     expect(settings).toContain("function setTabNamePattern")
     expect(settings).toContain("function setHotkey")
     expect(settings).toContain("function setAutostart")
-  })
-
-  test("trimThreshold setter clamps to 0-50 range", () => {
-    expect(settings).toContain("Math.max(0, Math.min(50, value))")
   })
 
   // --- Module-level singleton pattern ---
@@ -113,7 +98,6 @@ describe("useSettings composable", () => {
     // Settings are declared at module level, not inside the function
     expect(settings).toContain("const theme = ref<ThemeSetting>")
     expect(settings).toContain("const autoCopyOnClose = ref<boolean>")
-    expect(settings).toContain("const trimThreshold = ref<number>")
   })
 })
 
@@ -166,18 +150,13 @@ describe("SettingsDialog component", () => {
   test("has Behavior section with toggle switches", () => {
     expect(dialog).toContain("Behavior")
     expect(dialog).toContain("Auto-copy on close")
-    expect(dialog).toContain("Auto-trim on paste")
     expect(dialog).toContain('type="checkbox"')
   })
 
   // --- Advanced section ---
 
-  test("has Advanced section with slider and text input", () => {
+  test("has Advanced section with text input", () => {
     expect(dialog).toContain("Advanced")
-    expect(dialog).toContain("Trim threshold")
-    expect(dialog).toContain('type="range"')
-    expect(dialog).toContain('min="0"')
-    expect(dialog).toContain('max="50"')
     expect(dialog).toContain("Tab name pattern")
     expect(dialog).toContain('type="text"')
   })
