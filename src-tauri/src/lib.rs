@@ -1,46 +1,7 @@
-mod trim;
-
 use std::path::PathBuf;
 use tauri::menu::{MenuBuilder, MenuItemBuilder, SubmenuBuilder};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
 use tauri::{Emitter, Manager, RunEvent, WindowEvent};
-use trim::TrimBounds;
-
-#[tauri::command]
-async fn detect_trim(
-    image_bytes: Vec<u8>,
-    width: u32,
-    height: u32,
-    threshold: u8,
-) -> Result<TrimBounds, String> {
-    // Validate dimensions
-    if width == 0 || height == 0 {
-        return Err("Image dimensions must be non-zero".to_string());
-    }
-
-    if width > 32768 || height > 32768 {
-        return Err("Image dimensions exceed maximum (32768×32768)".to_string());
-    }
-
-    // Validate buffer size
-    let expected = (width as usize) * (height as usize) * 4;
-    if image_bytes.len() != expected {
-        return Err(format!(
-            "Buffer size mismatch: expected {} bytes ({}×{}×4), got {}",
-            expected,
-            width,
-            height,
-            image_bytes.len()
-        ));
-    }
-
-    // Run CPU-bound work on blocking thread
-    tauri::async_runtime::spawn_blocking(move || {
-        trim::detect_trim_bounds(&image_bytes, width, height, threshold)
-    })
-    .await
-    .map_err(|e| format!("Trim detection failed: {}", e))
-}
 
 #[tauri::command]
 async fn write_file(path: String, data: Vec<u8>) -> Result<(), String> {
@@ -64,7 +25,7 @@ pub fn run() {
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![detect_trim, write_file])
+        .invoke_handler(tauri::generate_handler![write_file])
         .setup(|app| {
             #[cfg(desktop)]
             {
@@ -147,6 +108,7 @@ pub fn run() {
                 let tool_callout = MenuItemBuilder::with_id("callout", "Callout").build(app)?;
                 let tool_text = MenuItemBuilder::with_id("text", "Text").build(app)?;
                 let tool_redact = MenuItemBuilder::with_id("redact", "Redaction").build(app)?;
+                let tool_crop = MenuItemBuilder::with_id("crop", "Crop").build(app)?;
                 let tools_menu = SubmenuBuilder::new(app, "Tools")
                     .item(&tool_select)
                     .separator()
@@ -163,6 +125,7 @@ pub fn run() {
                     .item(&tool_callout)
                     .item(&tool_text)
                     .item(&tool_redact)
+                    .item(&tool_crop)
                     .build()?;
 
                 let menu = MenuBuilder::new(app)
