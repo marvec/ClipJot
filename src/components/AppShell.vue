@@ -111,10 +111,6 @@ async function handleRefresh(): Promise<void> {
   }
 }
 
-function handleTrim(): void {
-  // TODO: invoke auto-trim detection and show overlay
-}
-
 function handleDuplicate(): void {
   duplicateActiveTab();
 }
@@ -131,7 +127,6 @@ function handleDuplicate(): void {
       @undo="handleUndo"
       @redo="handleRedo"
       @refresh="handleRefresh"
-      @trim="handleTrim"
       @duplicate="handleDuplicate"
       @settings="toggleSettings"
     />

@@ -10,16 +10,12 @@ const emit = defineEmits<{
 const {
   theme,
   autoCopyOnClose,
-  autoTrimOnPaste,
-  trimThreshold,
   tabNamePattern,
   hotkey,
   zoomSensitivity,
   autostart,
   setTheme,
   setAutoCopyOnClose,
-  setAutoTrimOnPaste,
-  setTrimThreshold,
   setTabNamePattern,
   setZoomSensitivity,
   setAutostart,
@@ -28,11 +24,6 @@ const {
 function handleThemeChange(event: Event): void {
   const target = event.target as HTMLSelectElement
   setTheme(target.value as ThemeSetting)
-}
-
-function handleTrimThreshold(event: Event): void {
-  const target = event.target as HTMLInputElement
-  setTrimThreshold(Number(target.value))
 }
 
 function handleTabNamePattern(event: Event): void {
@@ -126,34 +117,11 @@ onUnmounted(() => {
             />
           </label>
 
-          <label class="settings-field settings-field--toggle">
-            <span class="settings-field__label">Auto-trim on paste</span>
-            <input
-              type="checkbox"
-              class="settings-field__checkbox"
-              :checked="autoTrimOnPaste"
-              @change="setAutoTrimOnPaste(!autoTrimOnPaste)"
-            />
-          </label>
         </section>
 
         <!-- Advanced Section -->
         <section class="settings-section">
           <h3 class="settings-section__heading">Advanced</h3>
-
-          <label class="settings-field">
-            <span class="settings-field__label"
-              >Trim threshold ({{ trimThreshold }})</span
-            >
-            <input
-              type="range"
-              class="settings-field__slider"
-              min="0"
-              max="50"
-              :value="trimThreshold"
-              @input="handleTrimThreshold"
-            />
-          </label>
 
           <label class="settings-field">
             <span class="settings-field__label">Tab name pattern</span>

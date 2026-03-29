@@ -21,7 +21,6 @@ import {
   Redo2,
   Copy,
   Save,
-  Scissors,
   RefreshCw,
   CopyPlus,
   Settings,
@@ -34,18 +33,18 @@ interface ToolDef {
 }
 
 const tools: ToolDef[] = [
-  { id: "select", icon: MousePointer2, label: "Select (1)" },
-  { id: "pen", icon: Pen, label: "Pen (2)" },
-  { id: "pencil", icon: Pencil, label: "Pencil (3)" },
-  { id: "marker", icon: Highlighter, label: "Marker (4)" },
-  { id: "eraser", icon: Eraser, label: "Eraser (5)" },
-  { id: "arrow", icon: MoveUpRight, label: "Arrow (6)" },
-  { id: "line", icon: Minus, label: "Line (7)" },
-  { id: "rect", icon: Square, label: "Rectangle (8)" },
-  { id: "ellipse", icon: Circle, label: "Ellipse (9)" },
-  { id: "callout", icon: Hash, label: "Callout (0)" },
+  { id: "select", icon: MousePointer2, label: "Selection (S)" },
+  { id: "pen", icon: Pen, label: "Pen (P)" },
+  { id: "pencil", icon: Pencil, label: "Pencil (I)" },
+  { id: "marker", icon: Highlighter, label: "Marker (M)" },
+  { id: "eraser", icon: Eraser, label: "Eraser (E)" },
+  { id: "arrow", icon: MoveUpRight, label: "Arrow (A)" },
+  { id: "line", icon: Minus, label: "Line (L)" },
+  { id: "rect", icon: Square, label: "Rectangle (R)" },
+  { id: "ellipse", icon: Circle, label: "Circle (C)" },
+  { id: "callout", icon: Hash, label: "Callout (O)" },
   { id: "text", icon: Type, label: "Text (T)" },
-  { id: "redact", icon: ShieldOff, label: "Redact (R)" },
+  { id: "redact", icon: ShieldOff, label: "Redact (D)" },
 ];
 
 defineProps<{
@@ -60,7 +59,6 @@ const emit = defineEmits<{
   redo: [];
   copy: [];
   save: [];
-  trim: [];
   refresh: [];
   duplicate: [];
   settings: [];
@@ -117,18 +115,13 @@ function handleToolSelect(toolId: ToolId): void {
       <div class="toolbar__divider" role="separator" />
 
       <ActionButton
-        :icon="Scissors"
-        label="Smart trim"
-        @click="emit('trim')"
-      />
-      <ActionButton
         :icon="RefreshCw"
         label="Refresh clipboard"
         @click="emit('refresh')"
       />
       <ActionButton
         :icon="CopyPlus"
-        label="Duplicate tab"
+        label="Duplicate tab (⌘D)"
         @click="emit('duplicate')"
       />
 
