@@ -591,10 +591,26 @@ function resetDrag(): void {
 
 // ── Viewport zoom/pan context ──────────────────────────────────────────────
 
-const imageWidth = computed(() => activeTab.value?.imageWidth ?? 0)
-const imageHeight = computed(() => activeTab.value?.imageHeight ?? 0)
+/** Active crop bounds for the current tab (null = no crop) */
+const activeCropBounds = computed(() => {
+  // When crop tool is active, show full image so user can re-crop
+  if (activeTool.value === "crop") return null
+  return activeTab.value?.cropState.cropBounds.value ?? null
+})
+
+/** Effective display width (cropped or full) */
+const imageWidth = computed(() => activeCropBounds.value?.width ?? activeTab.value?.imageWidth ?? 0)
+/** Effective display height (cropped or full) */
+const imageHeight = computed(() => activeCropBounds.value?.height ?? activeTab.value?.imageHeight ?? 0)
 
 const viewport = createViewportContext(imageWidth, imageHeight)
+
+/** Inner content offset to shift crop region to origin */
+const cropContentTransform = computed(() => {
+  const crop = activeCropBounds.value
+  if (!crop) return undefined
+  return `translate(${-crop.x}px, ${-crop.y}px)`
+})
 
 /** Delegate to viewport context for coordinate transforms */
 function screenToImage(
@@ -663,6 +679,11 @@ watch(
   () => activeTab.value?.drawingState.strokes.value,
   () => redactionCanvasRef.value?.renderAll(),
 )
+
+// Re-fit when crop bounds change (effective image dimensions change)
+watch(activeCropBounds, () => {
+  void nextTick(callFitToWindow)
+})
 
 // ── Scroll-wheel zoom (Ctrl/Meta + wheel) ──────────────────────────────────
 
@@ -748,11 +769,20 @@ function onPointerUp(e: PointerEvent): void {
         class="canvas-viewport__layers"
         :style="{
           transform: viewport.transformStyle.value,
-          width: activeTab.imageWidth + 'px',
-          height: activeTab.imageHeight + 'px',
+          width: imageWidth + 'px',
+          height: imageHeight + 'px',
           cursor: layersCursor,
+          overflow: activeCropBounds ? 'hidden' : undefined,
         }"
       >
+        <div
+          class="canvas-viewport__crop-content"
+          :style="{
+            width: activeTab.imageWidth + 'px',
+            height: activeTab.imageHeight + 'px',
+            transform: cropContentTransform,
+          }"
+        >
         <img
           :src="activeTab.imageUrl!"
           class="canvas-viewport__base-image"
@@ -868,7 +898,9 @@ function onPointerUp(e: PointerEvent): void {
           @lock-width="onTextLockWidth"
         />
 
-        <!-- Crop overlay (z:20) for manual crop tool -->
+        </div><!-- end crop-content -->
+
+        <!-- Crop overlay (z:20) for manual crop tool — outside crop-content so it covers full image -->
         <CropOverlay
           v-if="activeTool === 'crop' && activeTab"
           :image-width="activeTab.imageWidth"
@@ -914,6 +946,10 @@ function onPointerUp(e: PointerEvent): void {
   left: 0;
   transform-origin: 0 0;
   will-change: transform;
+}
+
+.canvas-viewport__crop-content {
+  position: relative;
 }
 
 .canvas-viewport__base-image {
