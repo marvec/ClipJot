@@ -157,6 +157,7 @@ function onTextDelete(annotationId: string): void {
 const {
   activeTool,
   settingsVersion,
+  setTool,
   getShapeSettings,
   getLineSettings,
   getCalloutSettings,
@@ -186,6 +187,7 @@ function onCropConfirm(bounds: CropBounds): void {
   tab.undoRedo.push(cmd)
   promoteIfClipboard()
   cropPendingBounds.value = null
+  setTool("select")
 }
 
 function onCropCancel(): void {
@@ -612,12 +614,20 @@ const cropContentTransform = computed(() => {
   return `translate(${-crop.x}px, ${-crop.y}px)`
 })
 
-/** Delegate to viewport context for coordinate transforms */
+/** Delegate to viewport context for coordinate transforms.
+ *  When crop is active, offset by the crop origin so all layers
+ *  receive coordinates in the original image space. */
 function screenToImage(
   sx: number,
   sy: number,
 ): { x: number; y: number } {
-  return viewport.screenToImage(sx, sy)
+  const pt = viewport.screenToImage(sx, sy)
+  const crop = activeCropBounds.value
+  if (crop) {
+    pt.x += crop.x
+    pt.y += crop.y
+  }
+  return pt
 }
 
 /** Zoom percentage for the indicator badge */

@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "clipjot",
-  "version": "0.1.0",
+  "productName": "ClipJot",
+  "version": "1.0.1",
   "identifier": "org.marvec.clipjot",
   "build": {
     "beforeDevCommand": "bun run dev",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "clipjot",
+        "title": "ClipJot",
         "width": 1280,
         "height": 800,
         "minWidth": 800,
