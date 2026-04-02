@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "ClipJot",
+  "productName": "clipjot",
   "version": "1.0.1",
   "identifier": "org.marvec.clipjot",
   "build": {

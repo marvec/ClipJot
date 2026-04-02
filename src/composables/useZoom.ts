@@ -26,7 +26,7 @@ export interface ViewportContext {
 export const VIEWPORT_KEY: InjectionKey<ViewportContext> =
   Symbol("viewport-context")
 
-const MIN_ZOOM = 0.25
+const MIN_ZOOM = 0.05
 const MAX_ZOOM = 8.0
 
 /**

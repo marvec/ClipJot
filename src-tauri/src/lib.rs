@@ -157,7 +157,7 @@ pub fn run() {
                     .build()?;
 
                 TrayIconBuilder::new()
-                    .icon(app.default_window_icon().unwrap().clone())
+                    .icon(tauri::include_image!("icons/tray-icon@2x.png"))
                     .tooltip("ClipJot")
                     .menu(&tray_menu)
                     .show_menu_on_left_click(false)

@@ -720,8 +720,16 @@ function onWheel(e: WheelEvent): void {
   // Image point under cursor before zoom
   const imgPt = viewport.screenToImage(cursorX, cursorY)
 
-  // Proportional zoom: multiply current scale by a factor derived from deltaY
-  const speed = ZOOM_SPEED_BASE * zoomSensitivity.value
+  // Proportional zoom: multiply current scale by a factor derived from deltaY.
+  // Below 25% apply quadratic damping so zooming out to very small levels
+  // requires progressively more scroll input.
+  const SLOW_THRESHOLD = 0.25
+  const currentScale = viewport.scale.value
+  const damping =
+    currentScale < SLOW_THRESHOLD
+      ? Math.pow(currentScale / SLOW_THRESHOLD, 2)
+      : 1
+  const speed = ZOOM_SPEED_BASE * zoomSensitivity.value * damping
   const factor = Math.pow(2, -e.deltaY * speed)
   const newScale = viewport.scale.value * factor
   viewport.setZoom(newScale)

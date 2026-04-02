@@ -333,7 +333,22 @@ function onCalloutSizeChange(radius: number): void {
 
 function onFontSizeChange(fontSize: number): void {
   if (selIsText.value) {
-    commitAnnotationChange("fontSize", (selectedAnnotation.value as TextAnnotation).fontSize, fontSize)
+    const sel = selectedAnnotation.value as TextAnnotation
+    // Minimum height to show one line: fontSize * lineHeight(1.4) + top+bottom padding(4px each)
+    const minHeight = Math.ceil(fontSize * 1.4) + 8
+    const before: Partial<TextAnnotation> = { fontSize: sel.fontSize }
+    const after: Partial<TextAnnotation> = { fontSize }
+    if (sel.height < minHeight) {
+      before.height = sel.height
+      after.height = minHeight
+    }
+    const cmd = createSvgMutateCommand(
+      sel.id,
+      before as Partial<Annotation>,
+      after as Partial<Annotation>,
+      annotationStore.value!.updateAnnotation,
+    )
+    activeTab.value!.undoRedo.push(cmd)
     return
   }
   updateTextSettings({ fontSize })

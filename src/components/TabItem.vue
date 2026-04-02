@@ -66,7 +66,17 @@ function handleClose(e: MouseEvent): void {
       aria-label="Close tab"
       @click="handleClose"
     >
-      &times;
+      <svg
+        width="10"
+        height="10"
+        viewBox="0 0 10 10"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <line x1="1" y1="1" x2="9" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        <line x1="9" y1="1" x2="1" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
     </span>
   </button>
 </template>
@@ -126,11 +136,9 @@ function handleClose(e: MouseEvent): void {
   align-items: center;
   justify-content: center;
   margin-left: 2px;
-  font-size: 16px;
-  line-height: 1;
   color: var(--text-secondary);
   border-radius: 3px;
-  padding: 0 3px;
+  padding: 2px;
   flex-shrink: 0;
 }
 
