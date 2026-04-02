@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "clipjot",
+  "productName": "ClipJot",
   "version": "1.0.1",
-  "identifier": "org.marvec.clipjot",
+  "identifier": "app.clipjot.clipjot",
   "build": {
     "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:1420",

@@ -1,7 +1,7 @@
 [package]
 name = "ClipJot"
 version = "1.0.1"
-description = "A Tauri App"
+description = "A desktop clipboard image editor"
 authors = ["Martin Večeřa <info@clipjot.app>"]
 edition = "2021"
 
