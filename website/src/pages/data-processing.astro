@@ -7,10 +7,10 @@ const lastUpdated = '2 April 2026';
 
 const processors = [
   {
-    name: 'EmailOctopus',
+    name: 'Buttondown',
     purpose: 'Email subscription list management — stores email addresses of subscribers and sends update notifications.',
     country: 'United States',
-    dpa: 'https://emailoctopus.com/legal/gdpr',
+    dpa: 'https://buttondown.com/legal/privacy',
     category: 'Email service provider',
   },
   {
@@ -19,13 +19,6 @@ const processors = [
     country: 'United States (data may be processed in the EU)',
     dpa: 'https://business.safety.google/adsprocessorterms/',
     category: 'Analytics',
-  },
-  {
-    name: 'Cloudflare',
-    purpose: 'Subscription proxy service — a serverless worker that proxies subscription API requests from the browser to EmailOctopus. Does not store personal data.',
-    country: 'United States',
-    dpa: 'https://www.cloudflare.com/cloudflare-customer-dpa/',
-    category: 'Infrastructure / CDN',
   },
   {
     name: 'GitHub (GitHub Pages)',

@@ -1,8 +1,0 @@
-name = "clipjot-subscribe-proxy"
-main = "src/index.ts"
-compatibility_date = "2025-01-01"
-compatibility_flags = ["nodejs_compat"]
-
-[vars]
-# Set secrets via: bunx wrangler secret put EO_API_KEY
-# Set secrets via: bunx wrangler secret put EO_LIST_ID

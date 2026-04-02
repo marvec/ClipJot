@@ -1,14 +1,13 @@
-const WORKER_URL = import.meta.env.PUBLIC_SUBSCRIBE_WORKER_URL as string;
+const BUTTONDOWN_URL =
+  'https://buttondown.com/api/emails/embed-subscribe/clipjot';
 
 export async function subscribeEmail(email: string): Promise<void> {
-  if (!WORKER_URL) {
-    throw new Error('Subscription service is not configured');
-  }
+  const body = new URLSearchParams({ email });
 
-  const response = await fetch(WORKER_URL, {
+  const response = await fetch(BUTTONDOWN_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email }),
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: body.toString(),
   });
 
   if (!response.ok) {

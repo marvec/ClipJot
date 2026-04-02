@@ -1,7 +1,5 @@
 ---
 import 'vanilla-cookieconsent/dist/cookieconsent.css';
-
-const base = import.meta.env.BASE_URL;
 ---
 
 <style is:global>
@@ -42,8 +40,9 @@ const base = import.meta.env.BASE_URL;
   }
 </style>
 
-<script define:vars={{ base }}>
+<script>
   import * as CookieConsent from 'vanilla-cookieconsent';
+  const base = import.meta.env.BASE_URL;
 
   const gaIdMeta = document.querySelector('meta[name="ga-id"]');
   const GA_ID = gaIdMeta ? gaIdMeta.getAttribute('content') : null;
@@ -58,7 +57,7 @@ const base = import.meta.env.BASE_URL;
         window.dataLayer.push(arguments);
       }
       gtag('js', new Date());
-      gtag('config', GA_ID, { anonymize_ip: true });
+      gtag('config', GA_ID);
     });
   }
 
