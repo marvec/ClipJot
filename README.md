@@ -57,6 +57,16 @@ Tauri Builder for Windows: https://hub.docker.com/r/websmurf/tauri-builder
 
 This produces a native app bundle in `src-tauri/target/release/bundle/`.
 
+## Releasing
+
+Bump the version across all config files, commit, tag, and push to GitHub in one step:
+
+```bash
+bun scripts/bump-version.ts 1.1.0
+```
+
+This updates `package.json`, `src-tauri/tauri.conf.json`, and `src-tauri/Cargo.toml`, then creates a commit, a `v*` tag, and pushes both. The CI workflow picks up the tag and builds a draft GitHub release automatically.
+
 ## Testing
 
 ```bash
