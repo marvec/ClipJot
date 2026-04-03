@@ -55,3 +55,22 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
+
+      - name: Upload stable-named artifacts (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $exe = Get-ChildItem src-tauri/target/release/bundle/nsis/*.exe | Select-Object -First 1
+          $msi = Get-ChildItem src-tauri/target/release/bundle/msi/*.msi | Select-Object -First 1
+          gh release upload ${{ github.ref_name }} "$($exe.FullName)#ClipJot_x64-setup.exe" --clobber
+          gh release upload ${{ github.ref_name }} "$($msi.FullName)#ClipJot_x64.msi" --clobber
+
+      - name: Upload stable-named artifacts (macOS)
+        if: runner.os == 'macOS'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DMG=$(ls src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg | head -1)
+          gh release upload ${{ github.ref_name }} "$DMG#ClipJot_universal.dmg" --clobber

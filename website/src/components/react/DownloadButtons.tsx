@@ -31,7 +31,7 @@ export default function DownloadButtons() {
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
         <Button
           size="lg"
-          className="w-full sm:w-auto gap-2 text-base px-6"
+          className="w-full sm:w-auto gap-2 text-base px-6 cursor-pointer"
           onClick={() => handleDownload('macos')}
         >
           <svg
@@ -49,7 +49,7 @@ export default function DownloadButtons() {
         <Button
           size="lg"
           variant="outline"
-          className="w-full sm:w-auto gap-2 text-base px-6"
+          className="w-full sm:w-auto gap-2 text-base px-6 cursor-pointer bg-(--background)"
           onClick={() => handleDownload('windows')}
         >
           <svg

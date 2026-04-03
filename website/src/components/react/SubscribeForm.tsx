@@ -99,7 +99,7 @@ export default function SubscribeForm() {
           )}
         </div>
 
-        <Button type="submit" disabled={isSubmitDisabled} className="w-full sm:w-auto">
+        <Button type="submit" disabled={isSubmitDisabled} className="w-full sm:w-auto cursor-pointer">
           {state === 'loading' ? (
             <span className="flex items-center gap-2">
               <svg
