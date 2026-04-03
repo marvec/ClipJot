@@ -35,10 +35,9 @@ describe("SubToolbar", () => {
     expect(subToolbar).toContain("CalloutSizeSelector")
   })
 
-  test("has hidden class for select/crop tools", () => {
-    expect(subToolbar).toContain("sub-toolbar--hidden")
-    expect(subToolbar).toContain('"crop"')
-    expect(subToolbar).toContain('"select"')
+  test("is always visible (no hidden class)", () => {
+    expect(subToolbar).not.toContain("sub-toolbar--hidden")
+    expect(subToolbar).not.toContain("isVisible")
   })
 
   test("has data-section attributes for each parameter type", () => {
@@ -71,9 +70,13 @@ describe("SubToolbar", () => {
     expect(subToolbar).toContain('aria-label="Tool settings"')
   })
 
-  test("CSS transition for expand/collapse", () => {
-    expect(subToolbar).toContain("transition:")
-    expect(subToolbar).toContain("height 0.15s ease")
+  test("shows copy/save counter on the right", () => {
+    expect(subToolbar).toContain("sub-toolbar__counter")
+    expect(subToolbar).toContain("sub-toolbar__counter-digit")
+    expect(subToolbar).toContain("margin-left: auto")
+    expect(subToolbar).toContain("counterDigits")
+    expect(subToolbar).toContain("Copy and save counter")
+    expect(subToolbar).toContain("% 100000")
   })
 })
 

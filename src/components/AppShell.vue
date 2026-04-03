@@ -11,6 +11,7 @@ import { useToast } from "../composables/useToast";
 import { readClipboardImage } from "../composables/useClipboard";
 import { copyTabToClipboard, saveTabToFile } from "../composables/useExport";
 import { useMenuEvents } from "../composables/useMenuEvents";
+import { useCopyStats } from "../composables/useCopyStats";
 import { useSelection } from "../composables/useSelection";
 import { useAnnotationStore } from "../composables/useAnnotationStore";
 
@@ -28,6 +29,7 @@ const { hasSelection, selectedIds, deselect } = useSelection();
 
 const showSettings = ref(false);
 const canvasViewportRef = ref<InstanceType<typeof CanvasViewport> | null>(null);
+const { increment: incrementCopyStats } = useCopyStats();
 
 const canUndo = computed(() => activeTab.value?.undoRedo.canUndo.value ?? false);
 const canRedo = computed(() => activeTab.value?.undoRedo.canRedo.value ?? false);
@@ -91,6 +93,7 @@ async function handleCopy(): Promise<void> {
     await copyTabToClipboard(tab);
     markTabCopied(tab.id);
     success("Copied to clipboard");
+    incrementCopyStats();
   } catch (e) {
     error("Copy failed");
   }
@@ -109,6 +112,7 @@ async function handleSave(): Promise<void> {
     if (path) {
       await saveTabToFile(tab, path);
       success("Saved");
+      incrementCopyStats();
     }
   } catch (e) {
     console.error("[ClipJot] Save failed:", e);

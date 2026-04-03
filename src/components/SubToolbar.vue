@@ -14,6 +14,7 @@ import type {
   EllipseAnnotation,
   CalloutAnnotation,
 } from "../types/annotations"
+import { useCopyStats } from "../composables/useCopyStats"
 import ColorPicker from "./ColorPicker.vue"
 import StrokeWidthSelector from "./StrokeWidthSelector.vue"
 import OpacitySlider from "./OpacitySlider.vue"
@@ -65,14 +66,11 @@ const selIsLine = computed(() => selType.value === "arrow" || selType.value === 
 const selIsCallout = computed(() => selType.value === "callout")
 const selIsText = computed(() => selType.value === "text")
 
-/** Whether the sub-toolbar should be visible */
-const isVisible = computed(() => {
-  const tool = activeTool.value
-  if (tool === "crop") return true
-  // Show when any annotation is selected (select tool)
-  if (tool === "select") return selectedAnnotation.value !== null
-  return true
-})
+const { count: copyCount } = useCopyStats()
+
+const counterDigits = computed(() =>
+  String(copyCount.value % 100000).padStart(5, "0").split(""),
+)
 
 /** Which parameter sections to show for each tool */
 const showColor = computed(() => {
@@ -399,11 +397,9 @@ onUnmounted(() => {
 <template>
   <div
     class="sub-toolbar"
-    :class="{ 'sub-toolbar--hidden': !isVisible }"
     role="toolbar"
     aria-label="Tool settings"
   >
-    <template v-if="isVisible">
       <!-- Color -->
       <div v-if="showColor" class="sub-toolbar__section" data-section="color">
         <span class="sub-toolbar__label">Color</span>
@@ -499,7 +495,18 @@ onUnmounted(() => {
           <span>Cancel</span>
         </button>
       </div>
-    </template>
+
+      <!-- Copy/save counter -->
+      <div
+        class="sub-toolbar__counter"
+        title="Copy and save counter - how many images you have copied or saved with ClipJot so far."
+      >
+        <span
+          v-for="(digit, i) in counterDigits"
+          :key="i"
+          class="sub-toolbar__counter-digit"
+        >{{ digit }}</span>
+      </div>
   </div>
 </template>
 
@@ -515,14 +522,6 @@ onUnmounted(() => {
   border-bottom: 1px solid var(--border-subtle);
   overflow-x: auto;
   overflow-y: hidden;
-  transition: height 0.15s ease, opacity 0.15s ease;
-}
-
-.sub-toolbar--hidden {
-  height: 0;
-  opacity: 0;
-  border-bottom: none;
-  pointer-events: none;
 }
 
 .sub-toolbar__section {
@@ -577,5 +576,34 @@ onUnmounted(() => {
 
 .sub-toolbar__action-btn--cancel:hover {
   border-color: var(--border-default);
+}
+
+.sub-toolbar__counter {
+  margin-left: auto;
+  flex-shrink: 0;
+  display: flex;
+  border: 1px solid var(--border-default);
+  border-radius: 3px;
+  overflow: hidden;
+  cursor: default;
+  user-select: none;
+}
+
+.sub-toolbar__counter-digit {
+  width: 14px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  background: var(--surface-panel);
+  border-right: 1px solid var(--border-subtle);
+}
+
+.sub-toolbar__counter-digit:last-child {
+  border-right: none;
 }
 </style>

@@ -165,6 +165,8 @@ async function handleCopy(): Promise<void> {
     await copyTabToClipboard(tab)
     markTabCopied(tab.id)
     toast.success("Copied to clipboard")
+    const { useCopyStats } = await import("./useCopyStats")
+    useCopyStats().increment()
   } catch (err) {
     toast.error("Copy failed")
     console.error("Cmd+C copy failed:", err)
@@ -197,6 +199,8 @@ async function handleSaveToFile(): Promise<void> {
 
     await saveTabToFile(tab, filePath)
     toast.success("Saved to file")
+    const { useCopyStats } = await import("./useCopyStats")
+    useCopyStats().increment()
   } catch (err) {
     toast.error("Save failed")
     console.error("Cmd+S save failed:", err)
