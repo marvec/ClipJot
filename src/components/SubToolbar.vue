@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted } from "vue"
+import { computed, ref, watch, onMounted, onUnmounted } from "vue"
 import { useToolStore } from "../composables/useToolStore"
 import { useSelection } from "../composables/useSelection"
 import { useTabStore } from "../composables/useTabStore"
@@ -25,6 +25,7 @@ import CalloutSizeSelector from "./CalloutSizeSelector.vue"
 import RedactStrengthSelector from "./RedactStrengthSelector.vue"
 import AspectRatioSelector from "./AspectRatioSelector.vue"
 import { Check, X } from "lucide-vue-next"
+import SupportDialog from "./SupportDialog.vue"
 
 const {
   activeTool,
@@ -71,6 +72,12 @@ const { count: copyCount } = useCopyStats()
 const counterDigits = computed(() =>
   String(copyCount.value % 100000).padStart(5, "0").split(""),
 )
+
+const showSupport = ref(false)
+
+watch(copyCount, (v) => {
+  if (v === 30) showSupport.value = true
+})
 
 /** Which parameter sections to show for each tool */
 const showColor = computed(() => {
@@ -499,7 +506,12 @@ onUnmounted(() => {
       <!-- Copy/save counter -->
       <div
         class="sub-toolbar__counter"
-        title="Copy and save counter - how many images you have copied or saved with ClipJot so far."
+        title="Copy and save counter — click to support ClipJot!"
+        role="button"
+        tabindex="0"
+        @click="showSupport = true"
+        @keydown.enter="showSupport = true"
+        @keydown.space.prevent="showSupport = true"
       >
         <span
           v-for="(digit, i) in counterDigits"
@@ -508,6 +520,8 @@ onUnmounted(() => {
         >{{ digit }}</span>
       </div>
   </div>
+
+  <SupportDialog v-if="showSupport" @close="showSupport = false" />
 </template>
 
 <style scoped>
@@ -585,8 +599,13 @@ onUnmounted(() => {
   border: 1px solid var(--border-default);
   border-radius: 3px;
   overflow: hidden;
-  cursor: default;
+  cursor: pointer;
   user-select: none;
+  transition: border-color 0.15s;
+}
+
+.sub-toolbar__counter:hover {
+  border-color: var(--interactive-default);
 }
 
 .sub-toolbar__counter-digit {
