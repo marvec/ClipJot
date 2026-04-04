@@ -1,0 +1,55 @@
+---
+const backers: string[] = [
+//  'Alex Johnson',
+];
+
+const supporters: string[] = [
+  'Michal Várady',
+];
+---
+
+<section class="py-14 bg-(--surface-panel) border-t border-(--border)">
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 text-center">
+    <div data-anim="fade-up">
+      <h2 class="text-base font-semibold tracking-widest uppercase text-(--muted-foreground)">
+        Backers &amp; Supporters
+      </h2>
+      <p class="mt-2 text-sm text-(--muted-foreground)">
+        ClipJot exists thanks to people who believe in it early. Thank you.
+      </p>
+    </div>
+
+    <div class="mt-8 space-y-6">
+      <!-- Backers -->
+      {backers.length > 0 && (
+        <div data-anim="fade-up" data-anim-delay="1">
+          <p class="text-xs font-semibold uppercase tracking-widest text-(--muted-foreground) mb-3">
+            Backers
+          </p>
+          <ul class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            {backers.map((name) => (
+              <li class="text-sm text-(--foreground)">{name}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <!-- Supporters -->
+      <div data-anim="fade-up" data-anim-delay="2">
+        <p class="text-xs font-semibold uppercase tracking-widest text-(--muted-foreground) mb-3">
+          Supporters
+        </p>
+        <ul class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+          {supporters.map((name) => (
+            <li class="text-sm text-(--muted-foreground)">{name}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <p data-anim="fade-up" data-anim-delay="3" class="mt-8 text-xs text-(--muted-foreground) italic">
+      A special thank you to everyone who supported ClipJot from the very beginning.
+      Your trust and encouragement made this possible.
+    </p>
+  </div>
+</section>

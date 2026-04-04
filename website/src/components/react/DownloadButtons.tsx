@@ -7,6 +7,14 @@ export default function DownloadButtons() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   function handleDownload(platform: Platform) {
+    // Track GA4 download event
+    if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
+      (window as any).gtag('event', 'download', {
+        platform: platform === 'macos' ? 'mac' : 'win',
+        file_name: DOWNLOADS[platform].url.split('/').pop(),
+      });
+    }
+
     // Trigger the download
     const link = document.createElement('a');
     link.href = DOWNLOADS[platform].url;
