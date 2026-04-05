@@ -1,4 +1,5 @@
 #!/usr/bin/env bun
+export {};
 
 const version = process.argv[2];
 
@@ -61,7 +62,14 @@ console.log(`✓ src-tauri/Cargo.toml → ${version}`);
 
 // Commit and push develop
 console.log("\nCommitting...");
-run(["git", "add", "package.json", "src-tauri/tauri.conf.json", "src-tauri/Cargo.toml"]);
+run([
+  "git",
+  "add",
+  "package.json",
+  "src-tauri/tauri.conf.json",
+  "src-tauri/Cargo.toml",
+  "src-tauri/Cargo.lock",
+]);
 run(["git", "commit", "-m", `"Bump version to ${version}"`]);
 
 console.log("\nPushing develop...");
