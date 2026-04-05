@@ -2,6 +2,7 @@
   "name": "clipjot-api",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@vercel/node": "^5"
   }
