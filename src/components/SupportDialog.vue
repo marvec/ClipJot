@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from "vue"
 import { openUrl } from "@tauri-apps/plugin-opener"
+import bmcLogo from "../assets/bmc-logo.svg"
 
 const emit = defineEmits<{
   close: []
@@ -52,7 +53,7 @@ onUnmounted(() => {
           </p>
           <button class="support-dialog__bmc-btn" @click="handleBuyMeCoffee">
             <img
-              src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg"
+              :src="bmcLogo"
               alt=""
               class="support-dialog__bmc-icon"
             />

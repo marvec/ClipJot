@@ -161,7 +161,7 @@ pub fn run() {
                 let tool_rect = MenuItemBuilder::with_id("rect", "Rectangle")
                     .accelerator("R")
                     .build(app)?;
-                let tool_ellipse = MenuItemBuilder::with_id("ellipse", "Ellipse")
+                let tool_ellipse = MenuItemBuilder::with_id("ellipse", "Circle")
                     .accelerator("C")
                     .build(app)?;
                 let tool_callout = MenuItemBuilder::with_id("callout", "Callout")
@@ -170,7 +170,7 @@ pub fn run() {
                 let tool_text = MenuItemBuilder::with_id("text", "Text")
                     .accelerator("T")
                     .build(app)?;
-                let tool_redact = MenuItemBuilder::with_id("redact", "Redaction")
+                let tool_redact = MenuItemBuilder::with_id("redact", "Redact")
                     .accelerator("D")
                     .build(app)?;
                 let tool_crop = MenuItemBuilder::with_id("crop", "Crop")
