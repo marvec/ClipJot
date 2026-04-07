@@ -188,6 +188,12 @@ describe("SettingsDialog component", () => {
     expect(dialog).toContain("autostart")
   })
 
+  test("has Show in system tray toggle in System section", () => {
+    expect(dialog).toContain("Show in system tray")
+    expect(dialog).toContain("showInTray")
+    expect(dialog).toContain("setShowInTray")
+  })
+
   // --- Semantic tokens ---
 
   test("uses semantic design tokens", () => {

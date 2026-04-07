@@ -14,11 +14,13 @@ const {
   hotkey,
   zoomSensitivity,
   autostart,
+  showInTray,
   setTheme,
   setAutoCopyOnClose,
   setTabNamePattern,
   setZoomSensitivity,
   setAutostart,
+  setShowInTray,
 } = useSettings()
 
 function handleThemeChange(event: Event): void {
@@ -150,6 +152,16 @@ onUnmounted(() => {
               class="settings-field__checkbox"
               :checked="autostart"
               @change="setAutostart(!autostart)"
+            />
+          </label>
+
+          <label class="settings-field settings-field--toggle">
+            <span class="settings-field__label">Show in system tray</span>
+            <input
+              type="checkbox"
+              class="settings-field__checkbox"
+              :checked="showInTray"
+              @change="setShowInTray(!showInTray)"
             />
           </label>
         </section>
