@@ -33,12 +33,16 @@ interface ToolDef {
   label: string;
 }
 
-const tools: ToolDef[] = [
+type ToolEntry = ToolDef | { id: "separator" };
+
+const tools: ToolEntry[] = [
   { id: "select", icon: MousePointer2, label: "Selection (S)" },
+  { id: "separator" },
   { id: "pen", icon: Pen, label: "Pen (P)" },
   { id: "pencil", icon: Pencil, label: "Pencil (I)" },
   { id: "marker", icon: Highlighter, label: "Marker (M)" },
   { id: "eraser", icon: Eraser, label: "Eraser (E)" },
+  { id: "separator" },
   { id: "arrow", icon: MoveUpRight, label: "Arrow (A)" },
   { id: "line", icon: Minus, label: "Line (L)" },
   { id: "rect", icon: Square, label: "Rectangle (R)" },
@@ -46,6 +50,7 @@ const tools: ToolDef[] = [
   { id: "callout", icon: Hash, label: "Callout (O)" },
   { id: "text", icon: Type, label: "Text (T)" },
   { id: "redact", icon: ShieldOff, label: "Redact (D)" },
+  { id: "separator" },
   { id: "crop", icon: Crop, label: "Crop (P)" },
 ];
 
@@ -66,6 +71,14 @@ const emit = defineEmits<{
   settings: [];
 }>();
 
+function isSeparator(entry: ToolEntry): entry is { id: "separator" } {
+  return entry.id === "separator";
+}
+
+function asTool(entry: ToolEntry): ToolDef {
+  return entry as ToolDef;
+}
+
 function handleToolSelect(toolId: ToolId): void {
   setTool(toolId);
 }
@@ -74,15 +87,18 @@ function handleToolSelect(toolId: ToolId): void {
 <template>
   <div class="toolbar" role="toolbar" aria-label="Main toolbar">
     <div class="toolbar__tools" role="group" aria-label="Drawing tools">
-      <ToolButton
-        v-for="tool in tools"
-        :key="tool.id"
-        :tool-id="tool.id"
-        :icon="tool.icon"
-        :label="tool.label"
-        :is-active="activeTool === tool.id"
-        @select="handleToolSelect"
-      />
+      <template v-for="(tool, index) in tools" :key="index">
+        <div v-if="isSeparator(tool)" class="toolbar__divider" role="separator" />
+        <template v-else>
+          <ToolButton
+            :tool-id="asTool(tool).id"
+            :icon="asTool(tool).icon"
+            :label="asTool(tool).label"
+            :is-active="activeTool === asTool(tool).id"
+            @select="handleToolSelect"
+          />
+        </template>
+      </template>
     </div>
 
     <div class="toolbar__spacer" />
