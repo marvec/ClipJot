@@ -1,5 +1,5 @@
 use std::path::PathBuf;
-use std::sync::{Arc, Mutex};
+use std::sync::Mutex;
 use tauri::menu::{MenuBuilder, MenuItem, MenuItemBuilder, SubmenuBuilder};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent};
 use tauri::{Emitter, Manager, RunEvent, WindowEvent};
@@ -13,8 +13,8 @@ struct DynamicMenuItems {
 }
 
 struct AppState {
-    show_in_tray: Arc<Mutex<bool>>,
-    tray: Arc<Mutex<Option<TrayIcon<tauri::Wry>>>>,
+    show_in_tray: Mutex<bool>,
+    tray: Mutex<Option<TrayIcon<tauri::Wry>>>,
 }
 
 #[tauri::command]
@@ -54,9 +54,10 @@ fn set_tray_mode(
     state: tauri::State<'_, AppState>,
     enabled: bool,
 ) -> Result<(), String> {
-    *state.show_in_tray.lock().unwrap() = enabled;
+    *state.show_in_tray.lock().map_err(|e| e.to_string())? = enabled;
 
-    if let Some(tray) = state.tray.lock().unwrap().as_ref() {
+    let tray_guard = state.tray.lock().map_err(|e| e.to_string())?;
+    if let Some(tray) = tray_guard.as_ref() {
         tray.set_visible(enabled).map_err(|e| e.to_string())?;
     }
 
@@ -234,8 +235,8 @@ pub fn run() {
                     fit_to_window: fit_to_window_item,
                 });
                 app.manage(AppState {
-                    show_in_tray: Arc::new(Mutex::new(true)),
-                    tray: Arc::new(Mutex::new(None)),
+                    show_in_tray: Mutex::new(true),
+                    tray: Mutex::new(None),
                 });
 
                 // Forward menu events to the frontend
@@ -328,7 +329,7 @@ pub fn run() {
                     })
                     .build(app)?;
 
-                *app.state::<AppState>().tray.lock().unwrap() = Some(built_tray);
+                *app.state::<AppState>().tray.lock().map_err(|e| e.to_string())? = Some(built_tray);
             }
 
             Ok(())
