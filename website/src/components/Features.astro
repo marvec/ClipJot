@@ -47,7 +47,7 @@ const features = [
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {features.map((feature, i) => (
         <div data-anim="fade-up" data-anim-delay={String(i + 1)} class="rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] p-6 hover:border-[var(--flexoki-blue-300)] transition-colors">
-          <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-[var(--accent)] text-[var(--flexoki-blue-600)]">
+          <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-[var(--accent)] text-[var(--accent-foreground)]">
             <Fragment set:html={feature.icon} />
           </div>
           <h3 class="text-base font-semibold text-[var(--foreground)]">{feature.title}</h3>

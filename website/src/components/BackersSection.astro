@@ -1,10 +1,16 @@
 ---
-const backers: string[] = [
-//  'Alex Johnson',
+interface Person {
+  name: string;
+  url?: string;
+}
+
+const backers: Person[] = [
+//  { name: 'Alex Johnson', url: 'https://example.com' },
 ];
 
-const supporters: string[] = [
-  'Michal Várady',
+const supporters: Person[] = [
+  { name: 'Michal Várady' },
+  { name: 'Jakub Rodák', url: 'https://example.com' },
 ];
 ---
 
@@ -27,8 +33,10 @@ const supporters: string[] = [
             Backers
           </p>
           <ul class="flex flex-wrap justify-center gap-x-6 gap-y-2">
-            {backers.map((name) => (
-              <li class="text-sm text-(--foreground)">{name}</li>
+            {backers.map(({ name, url }) => (
+              <li class="text-sm text-(--foreground)">
+                {url ? <a href={url} target="_blank" rel="noopener noreferrer" class="hover:text-(--foreground) underline underline-offset-2">{name}</a> : name}
+              </li>
             ))}
           </ul>
         </div>
@@ -40,8 +48,10 @@ const supporters: string[] = [
           Supporters
         </p>
         <ul class="flex flex-wrap justify-center gap-x-6 gap-y-2">
-          {supporters.map((name) => (
-            <li class="text-sm text-(--muted-foreground)">{name}</li>
+          {supporters.map(({ name, url }) => (
+            <li class="text-sm text-(--muted-foreground)">
+              {url ? <a href={url} target="_blank" rel="noopener noreferrer" class="text-(--muted-foreground) hover:text-(--foreground) underline underline-offset-2">{name}</a> : name}
+            </li>
           ))}
         </ul>
       </div>

@@ -50,6 +50,7 @@
   --popover-foreground: var(--flexoki-950);
   --primary: var(--flexoki-blue-600);
   --primary-foreground: var(--flexoki-paper);
+  --primary-hover: var(--flexoki-blue-700);
   --secondary: var(--flexoki-100);
   --secondary-foreground: var(--flexoki-950);
   --muted: var(--flexoki-100);
@@ -63,27 +64,26 @@
   --radius: 0.5rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: var(--flexoki-950);
-    --foreground: var(--flexoki-100);
-    --card: var(--flexoki-900);
-    --card-foreground: var(--flexoki-100);
-    --popover: var(--flexoki-900);
-    --popover-foreground: var(--flexoki-100);
-    --primary: var(--flexoki-blue-400);
-    --primary-foreground: var(--flexoki-950);
-    --secondary: var(--flexoki-800);
-    --secondary-foreground: var(--flexoki-100);
-    --muted: var(--flexoki-800);
-    --muted-foreground: var(--flexoki-400);
-    --accent: var(--flexoki-blue-900);
-    --accent-foreground: var(--flexoki-blue-300);
-    --destructive: var(--flexoki-red-400);
-    --border: var(--flexoki-800);
-    --input: var(--flexoki-800);
-    --ring: var(--flexoki-blue-400);
-  }
+:root.dark {
+  --background: var(--flexoki-950);
+  --foreground: var(--flexoki-100);
+  --card: var(--flexoki-900);
+  --card-foreground: var(--flexoki-100);
+  --popover: var(--flexoki-900);
+  --popover-foreground: var(--flexoki-100);
+  --primary: var(--flexoki-blue-200);
+  --primary-foreground: var(--flexoki-950);
+  --primary-hover: var(--flexoki-blue-300);
+  --secondary: var(--flexoki-800);
+  --secondary-foreground: var(--flexoki-100);
+  --muted: var(--flexoki-800);
+  --muted-foreground: var(--flexoki-400);
+  --accent: var(--flexoki-blue-900);
+  --accent-foreground: var(--flexoki-blue-200);
+  --destructive: var(--flexoki-red-400);
+  --border: var(--flexoki-800);
+  --input: var(--flexoki-800);
+  --ring: var(--flexoki-blue-400);
 }
 
 /* Base styles */
@@ -100,6 +100,12 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+@layer base {
+  a:hover {
+    color: var(--primary-hover);
+  }
 }
 
 /* Focus visible */

@@ -115,7 +115,7 @@ export default function SubscribeForm() {
             href={`${BASE}terms`}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline text-[var(--foreground)]"
+            className="underline text-[var(--foreground)] hover:text-accent transition-colors"
           >
             Terms and Conditions
           </a>{' '}
@@ -124,7 +124,7 @@ export default function SubscribeForm() {
             href={`${BASE}privacy`}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline text-[var(--foreground)]"
+            className="underline text-[var(--foreground)] hover:text-accent transition-colors"
           >
             Privacy Policy
           </a>

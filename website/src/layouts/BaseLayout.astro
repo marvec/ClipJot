@@ -76,6 +76,17 @@ const jsonLd = {
 
     <!-- GA placeholder — actual script injected only after cookie consent -->
     {gaId && <meta name="ga-id" content={gaId} />}
+
+    <!-- Theme: apply .dark class before first paint to prevent flash -->
+    <script is:inline>
+      (function () {
+        var stored = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (stored === 'dark' || (!stored && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <slot />

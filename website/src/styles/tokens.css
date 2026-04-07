@@ -27,9 +27,8 @@
   --feedback-error: var(--flexoki-red-500);
 }
 
-/* ── Dark theme (media query based for website) ── */
-@media (prefers-color-scheme: dark) {
-  :root {
+/* ── Dark theme (class-based for manual toggle, with system fallback) ── */
+:root.dark {
     --surface-app: var(--flexoki-950);
     --surface-panel: var(--flexoki-900);
     --surface-elevated: var(--flexoki-800);
@@ -48,7 +47,6 @@
     --interactive-active: var(--flexoki-blue-200);
     --interactive-disabled: var(--flexoki-700);
 
-    --feedback-success: var(--flexoki-green-400);
-    --feedback-error: var(--flexoki-red-400);
-  }
+  --feedback-success: var(--flexoki-green-400);
+  --feedback-error: var(--flexoki-red-400);
 }

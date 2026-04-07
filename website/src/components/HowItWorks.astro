@@ -41,12 +41,12 @@ const steps = [
           )}
 
           <!-- Icon circle -->
-          <div class="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--background)] border-2 border-[var(--accent)] text-[var(--accent)]">
+          <div class="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--surface-elevated)] border-2 border-[var(--primary)] text-[var(--primary)]">
             <Fragment set:html={step.icon} />
           </div>
 
           <!-- Step number badge -->
-          <div class="mt-4 mb-2 inline-flex items-center rounded-full bg-[var(--accent)] px-2.5 py-0.5 text-xs font-semibold text-[var(--flexoki-blue-700)]">
+          <div class="mt-4 mb-2 inline-flex items-center rounded-full bg-[var(--primary)] px-2.5 py-0.5 text-xs font-semibold text-[var(--primary-foreground)]">
             Step {step.number}
           </div>
 
