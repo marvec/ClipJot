@@ -365,13 +365,29 @@ pub fn run() {
         .expect("error while building tauri application");
 
     // Keep event loop alive for system tray
-    app.run(|_app_handle, event| {
-        if let RunEvent::ExitRequested { code, api, .. } = &event {
-            // Only prevent exit when no explicit exit code (e.g., all windows closed).
-            // Allow exit(0) from tray quit menu to go through.
-            if code.is_none() {
-                api.prevent_exit();
+    app.run(|app_handle, event| {
+        match &event {
+            RunEvent::ExitRequested { code, api, .. } => {
+                // Only prevent exit when no explicit exit code (e.g., all windows closed).
+                // Allow exit(0) from tray quit menu to go through.
+                if code.is_none() {
+                    api.prevent_exit();
+                }
             }
+            #[cfg(target_os = "macos")]
+            RunEvent::Reopen { has_visible_windows, .. } => {
+                // Dock icon clicked while window is hidden — show the window.
+                if !has_visible_windows {
+                    let _ = app_handle
+                        .set_activation_policy(tauri::ActivationPolicy::Regular);
+                    if let Some(window) = app_handle.get_webview_window("main") {
+                        let _ = window.show();
+                        let _ = window.unminimize();
+                        let _ = window.set_focus();
+                    }
+                }
+            }
+            _ => {}
         }
     });
 }

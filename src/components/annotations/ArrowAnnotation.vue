@@ -35,35 +35,43 @@ const controlAbs = computed(() => {
   }
 })
 
-/** Quadratic Bezier path: M start Q control end */
+/**
+ * Tangent direction (unit vector) at the endpoint of the quadratic Bezier.
+ * For a quadratic Bezier, the tangent at t=1 is the direction from the
+ * control point to the endpoint.
+ */
+const endTangent = computed(() => {
+  const { endX, endY } = props.annotation
+  const cp = controlAbs.value
+  const dx = endX - cp.x
+  const dy = endY - cp.y
+  const len = Math.sqrt(dx * dx + dy * dy)
+  if (len === 0) return { ux: 1, uy: 0 }
+  return { ux: dx / len, uy: dy / len }
+})
+
+/**
+ * Quadratic Bezier path ending at the midpoint of the arrowhead body so the
+ * line's round cap is hidden inside the polygon (prevents the line from
+ * showing through the arrowhead tip).
+ */
 const bezierPath = computed(() => {
   const { x, y, endX, endY } = props.annotation
   const cp = controlAbs.value
-  return `M ${x} ${y} Q ${cp.x} ${cp.y} ${endX} ${endY}`
+  const { ux, uy } = endTangent.value
+  const { length: ahLength } = arrowheadSize.value
+  // Stop the path halfway into the arrowhead so the cap is hidden
+  const stopX = endX - ux * (ahLength / 2)
+  const stopY = endY - uy * (ahLength / 2)
+  return `M ${x} ${y} Q ${cp.x} ${cp.y} ${stopX} ${stopY}`
 })
 
 /**
  * Arrowhead polygon points oriented along the curve tangent at the endpoint.
- * For a quadratic Bezier, the tangent at t=1 is the direction from the
- * control point to the endpoint.
  */
 const arrowheadPoints = computed(() => {
   const { endX, endY } = props.annotation
-  const cp = controlAbs.value
-
-  // Direction from control point to end (tangent at t=1)
-  const dx = endX - cp.x
-  const dy = endY - cp.y
-  const len = Math.sqrt(dx * dx + dy * dy)
-
-  // Avoid division by zero for degenerate curves
-  if (len === 0) {
-    return `${endX},${endY} ${endX},${endY} ${endX},${endY}`
-  }
-
-  // Unit tangent
-  const ux = dx / len
-  const uy = dy / len
+  const { ux, uy } = endTangent.value
 
   // Perpendicular
   const px = -uy

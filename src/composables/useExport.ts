@@ -253,8 +253,37 @@ export function serializeAnnotationsToSvg(
         const midY = (a.y + a.endY) / 2
         const cpX = midX + a.controlX
         const cpY = midY + a.controlY
+
+        // Tangent at t=1: direction from control point to endpoint
+        const dx = a.endX - cpX
+        const dy = a.endY - cpY
+        const len = Math.sqrt(dx * dx + dy * dy)
+        const ux = len === 0 ? 1 : dx / len
+        const uy = len === 0 ? 0 : dy / len
+        const px = -uy
+        const py = ux
+
+        // Arrowhead dimensions (mirror ArrowAnnotation.vue)
+        const sw = a.strokeWidth
+        const ahLength = Math.max(16, 10 + sw * 3)
+        const ahWidth = Math.max(10, 6 + sw * 2)
+
+        // Stop the line halfway into the arrowhead so the cap is hidden
+        const stopX = a.endX - ux * (ahLength / 2)
+        const stopY = a.endY - uy * (ahLength / 2)
+
+        const baseX = a.endX - ux * ahLength
+        const baseY = a.endY - uy * ahLength
+        const leftX = baseX + px * ahWidth
+        const leftY = baseY + py * ahWidth
+        const rightX = baseX - px * ahWidth
+        const rightY = baseY - py * ahWidth
+
         parts.push(
-          `<path d="M ${a.x} ${a.y} Q ${cpX} ${cpY} ${a.endX} ${a.endY}" fill="none" stroke="${stroke}" stroke-width="${a.strokeWidth}" stroke-linecap="round"/>`,
+          `<path d="M ${a.x} ${a.y} Q ${cpX} ${cpY} ${stopX} ${stopY}" fill="none" stroke="${stroke}" stroke-width="${a.strokeWidth}" stroke-linecap="round"/>`,
+        )
+        parts.push(
+          `<polygon points="${a.endX},${a.endY} ${leftX},${leftY} ${rightX},${rightY}" fill="${stroke}" stroke="${stroke}" stroke-width="1" stroke-linejoin="round"/>`,
         )
         break
       }
