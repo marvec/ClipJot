@@ -66,8 +66,8 @@ describe("Tool Key Map", () => {
     expect(keyboardFile).toContain('s: "select"')
   })
 
-  test("maps p to crop", () => {
-    expect(keyboardFile).toContain('p: "crop"')
+  test("maps p to pen", () => {
+    expect(keyboardFile).toContain('p: "pen"')
   })
 
   test("maps i to pencil", () => {
@@ -108,6 +108,10 @@ describe("Tool Key Map", () => {
 
   test("maps d to redact", () => {
     expect(keyboardFile).toContain('d: "redact"')
+  })
+
+  test("maps x to crop", () => {
+    expect(keyboardFile).toContain('x: "crop"')
   })
 })
 

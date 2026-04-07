@@ -64,8 +64,8 @@ describe("Viewport Context / Zoom", () => {
   test("setZoom clamps to min/max range", () => {
     const ctx = createViewportContext(ref(1920), ref(1080))
 
-    ctx.setZoom(0.1) // Below min 0.25
-    expect(ctx.scale.value).toBe(0.25)
+    ctx.setZoom(0.01) // Below min 0.05
+    expect(ctx.scale.value).toBe(0.05)
 
     ctx.setZoom(10) // Above max 8.0
     expect(ctx.scale.value).toBe(8)

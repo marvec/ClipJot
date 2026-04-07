@@ -96,7 +96,7 @@ describe("Toolbar", () => {
   });
 
   test("active tool gets distinct visual class", () => {
-    expect(toolbar).toContain("activeTool === tool.id");
+    expect(toolbar).toContain("activeTool === asTool(tool).id");
     expect(toolbar).toContain("is-active");
   });
 

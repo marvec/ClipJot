@@ -80,10 +80,6 @@ describe("Menu Bar — Rust lib.rs", () => {
     expect(libRs).toContain('"CmdOrCtrl+0"')
   })
 
-  test("View menu: Toggle Theme", () => {
-    expect(libRs).toContain('"toggle-theme", "Toggle Theme"')
-  })
-
   // ── Tools menu ──
   test("Tools menu: all 12 tools present", () => {
     const toolEntries = [
@@ -95,10 +91,10 @@ describe("Menu Bar — Rust lib.rs", () => {
       ['"arrow", "Arrow"'],
       ['"line", "Line"'],
       ['"rect", "Rectangle"'],
-      ['"ellipse", "Ellipse"'],
+      ['"ellipse", "Circle"'],
       ['"callout", "Callout"'],
       ['"text", "Text"'],
-      ['"redact", "Redaction"'],
+      ['"redact", "Redact"'],
     ]
     for (const [entry] of toolEntries) {
       expect(libRs).toContain(entry)

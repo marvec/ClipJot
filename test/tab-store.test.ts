@@ -380,7 +380,7 @@ describe("EmptyClipboard Component", () => {
       "utf-8",
     )
     expect(content).toContain("No image in clipboard")
-    expect(content).toContain("Cmd+Shift+J")
+    expect(content).toContain("displayShortcut")
   })
 
   test("EmptyClipboard.vue uses semantic tokens", () => {
